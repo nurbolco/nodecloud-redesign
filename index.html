@@ -1,0 +1,1845 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NodeCloud</title>
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root {
+  --bg: #e8e9e4;
+  --raise: #f1f2ee;
+  --ink: #17191b;
+  --muted: #595d58;
+  --faint: #8a8d87;
+  --line: #c8cbc3;
+  --line-soft: #d8dad3;
+  --brand: #ffcc00;
+  --brand-ink: #17191b;
+  --low: #8a5300;
+  --none: #7a7d78;
+  --band: #17191b;
+  --band-ink: #e8e9e4;
+  --band-muted: #9b9e97;
+  --band-line: #33362f;
+  --focus: #1f4fd6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141514;
+    --raise: #1b1c1a;
+    --ink: #e5e6e0;
+    --muted: #9b9e97;
+    --faint: #6f726c;
+    --line: #2f312d;
+    --line-soft: #252724;
+    --brand: #ffcc00;
+    --brand-ink: #17191b;
+    --low: #e0a447;
+    --none: #7d807a;
+    --band: #e5e6e0;
+    --band-ink: #17191b;
+    --band-muted: #595d58;
+    --band-line: #c8cbc3;
+    --focus: #8fb0ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141514;
+  --raise: #1b1c1a;
+  --ink: #e5e6e0;
+  --muted: #9b9e97;
+  --faint: #6f726c;
+  --line: #2f312d;
+  --line-soft: #252724;
+  --brand: #ffcc00;
+  --brand-ink: #17191b;
+  --low: #e0a447;
+  --none: #7d807a;
+  --band: #e5e6e0;
+  --band-ink: #17191b;
+  --band-muted: #595d58;
+  --band-line: #c8cbc3;
+  --focus: #8fb0ff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body { overflow-x: clip; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.45 "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  padding: 0 24px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.page { max-width: 1240px; margin: 0 auto; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 700; }
+p { margin: 0; text-wrap: pretty; }
+/* short copy: lines of even length */
+.hero .lead, .hero .pay, .s-head p, .q-spec, .cat-note, .fine, .band p, .last p, .f-about p, .steps p, .facts dd, .spec dd { text-wrap: balance; }
+a { color: inherit; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* figures: same face as the text, equal-width digits so columns line up */
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+
+/* ---- buttons: square, flat, no motion */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 44px; padding: 0 20px;
+  border: 1px solid var(--ink); border-radius: 2px;
+  background: transparent; color: var(--ink);
+  font-weight: 600; font-size: 15px; text-decoration: none; cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--raise); }
+.btn-main { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+.btn-main:hover { background: #f2c200; border-color: #f2c200; }
+.btn-sm { height: 36px; padding: 0 14px; font-size: 14px; }
+
+/* ---- notice + header */
+.notice {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+  font-size: 14px; color: var(--muted);
+}
+.notice-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notice-text b { color: var(--ink); font-weight: 600; }
+.notice-text .short { display: none; }
+.notice-act { display: flex; align-items: center; gap: 12px; flex: none; }
+.notice-act a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+.notice-x { width: 28px; height: 28px; border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; border-radius: 2px; }
+.notice-x:hover { color: var(--ink); background: var(--raise); }
+@media (max-width: 720px) { .notice-text { white-space: normal; } .notice-text .full { display: none; } .notice-text .short { display: inline; } }
+header.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 16px 0; border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; background: var(--bg); z-index: 5;
+  /* fill to the window edges, not only the content column */
+  box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax);
+}
+/* logo: mark in the brand yellow, wordmark follows the text colour of the theme */
+.logo { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); flex: none; }
+.logo svg { display: block; height: 24px; width: auto; }
+.logo-mark { fill: var(--brand); }
+.logo-word { fill: currentColor; }
+nav.main { display: flex; gap: 28px; font-size: 15px; }
+nav.main a { text-decoration: none; color: var(--muted); }
+nav.main a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.tools { display: flex; align-items: center; gap: 10px; }
+.pick {
+  height: 36px; padding: 0 28px 0 10px; border: 1px solid var(--line); border-radius: 2px;
+  background: var(--bg); color: var(--ink); font-size: 14px; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.pick:hover { border-color: var(--muted); }
+.login { text-decoration: none; font-size: 15px; padding: 0 6px; }
+.login:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---- hero */
+.hero { padding: 64px 0 48px; border-bottom: 1px solid var(--line); display: grid; gap: 40px; }
+/* two lines: the break is in the copy, narrow screens wrap further on their own */
+.hero-top .hero-text { position: relative; z-index: 2; }
+.hero h1 { font-size: clamp(30px, 3.3vw, 46px); line-height: 1; letter-spacing: -0.04em; white-space: pre-line; text-wrap: wrap; }
+/* isometric GPU cutaway: flat theme colours, ink hairlines, yellow only where work happens */
+.hero-top { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+/* the faded rim is transparent, so it may tuck under neighbours without clutter */
+.art { position: relative; margin: 0; width: 100%; pointer-events: none; }
+/* two layers: the big static drawing is painted once, only the small fx layer repaints */
+#artSvg, #artFx { will-change: transform; }
+#artFx { position: absolute; inset: 0; width: 100%; height: 100%; }
+.art .cell-fx, .art .lamp-fx { fill: var(--brand); opacity: 0; }
+.art .cell-fx.on, .art .lamp-fx.on { opacity: 1; }
+.art svg { overflow: visible; }
+.art svg { display: block; width: 100%; height: auto; overflow: visible; }
+.art .env { stroke: var(--muted); stroke-width: .8; fill: none; }
+.art .env-f { stroke: var(--faint); stroke-width: .6; fill: none; }
+.art .cable { stroke: var(--muted); stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.art .ln { stroke: var(--ink); stroke-width: 1; stroke-linejoin: round; fill: none; }
+.art .f-top { fill: var(--raise); }
+.art .f-l { fill: var(--line-soft); }
+.art .f-r { fill: var(--line); }
+.art .f-bg { fill: var(--bg); }
+.art .f-ink { fill: var(--ink); }
+.art .f-brand { fill: var(--brand); }
+.art .thin { stroke: var(--muted); stroke-width: .75; fill: none; }
+.art .trace { stroke: var(--faint); stroke-width: 1; fill: none; }
+/* data in motion: offset driven from the 30 fps loop through one custom property */
+.art .flow { stroke: var(--brand); stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-dasharray: 2 14; stroke-dashoffset: var(--dash, 0); }
+.art .flow.slow { stroke-dashoffset: var(--dash-slow, 0); }
+.art .cell { fill: var(--raise); stroke: var(--muted); stroke-width: .5; transition: fill .25s; }
+.art .cell.on { fill: var(--brand); }
+.art .wire { stroke: var(--muted); stroke-width: .9; fill: none; stroke-linecap: round; }
+.art .wire-f { stroke: var(--faint); stroke-width: .55; }
+.art .blade { stroke: var(--ink); stroke-width: .8; fill: var(--raise); stroke-linejoin: round; }
+.art .fan-disk { fill: var(--raise); opacity: .82; }
+.art .hub-mark { fill: var(--brand-ink); }
+.art .lamp { fill: var(--line); transition: fill .15s; }
+.art .lamp.on { fill: var(--brand); }
+.art .lab { font: 500 13px/1 "Open Sans", sans-serif; fill: var(--ink); }
+.art .lab-m { font: 400 13px/1 "Open Sans", sans-serif; fill: var(--muted); }
+.art .lead { stroke: var(--muted); stroke-width: .75; fill: none; }
+.art .dot { fill: var(--ink); }
+@media (max-width: 900px) { .hero-top { grid-template-columns: 1fr; gap: 16px; } .art { margin: 0 auto; width: 100%; } .q-models { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; } .q-models button:nth-last-child(-n+3) { border-bottom: 1px solid var(--line-soft); } .q-models button:nth-last-child(-n+2) { border-bottom: 0; } .q-foot { grid-template-columns: 1fr 1fr; } .q-foot .btn { grid-column: 1 / -1; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hero-below { display: block; }
+.hero-text { display: flex; flex-direction: column; gap: 20px; }
+.hero-text h1 { margin-bottom: 8px; }
+.hero .links { margin-top: 8px; }
+.hero .lead { font-size: 18px; color: var(--ink); max-width: 30em; }
+.hero .pay { font-size: 15px; color: var(--muted); max-width: 32em; }
+.hero .links { display: flex; gap: 24px; flex-wrap: wrap; font-size: 15px; font-weight: 500; }
+.hero .links a { text-underline-offset: 4px; }
+
+/* quick launch: drawn with the same rules as the catalogue (ink top rule, hairlines) */
+.quick { display: grid; margin: 0; border-top: 1px solid var(--ink); }
+.q-row { display: grid; gap: 10px; padding: 14px 0 18px; border-bottom: 1px solid var(--line); }
+.q-label { font-size: 13px; color: var(--muted); }
+.q-models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 40px; }
+.q-models button {
+  display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  height: 42px; padding: 0; border: 0; border-bottom: 1px solid var(--line-soft);
+  background: transparent; cursor: pointer; text-align: left;
+}
+.q-models button:nth-last-child(-n+3) { border-bottom: 0; }
+.q-models button::before {
+  content: ""; width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid var(--faint); box-sizing: border-box;
+}
+.q-models button:hover::before { border-color: var(--ink); }
+.q-models b { font-weight: 500; font-size: 15px; }
+.q-models span { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q-models [aria-checked="true"]::before { border: 4.5px solid var(--ink); }
+.q-models [aria-checked="true"] b { font-weight: 700; }
+.q-models [aria-checked="true"] span { color: var(--ink); }
+.q-period { width: 100%; }
+.q-period button { flex: 1; }
+/* one row under the models: period, total, launch */
+.q-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 40px; align-items: end; padding: 18px 0 0; }
+.q-per { display: grid; gap: 10px; }
+.q-sum { display: grid; gap: 8px; }
+.q-sum b { font-size: 34px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.q-spec { font-size: 13px; color: var(--muted); }
+.q-spec .low { color: var(--low); }
+.q-spec .none { color: var(--none); }
+
+/* ---- section scaffolding */
+section.s { padding: 64px 0; border-bottom: 1px solid var(--line); }
+.s-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: end; margin-bottom: 32px; }
+.s-head h2 { font-size: clamp(28px, 3.4vw, 44px); line-height: 1; letter-spacing: -0.04em; }
+.s-head p { color: var(--muted); max-width: 36em; }
+.s-head-stack { grid-template-columns: 1fr; gap: 16px; align-items: start; }
+.s-head-stack p { max-width: 44em; }
+
+/* ---- catalogue */
+.filters { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+.seg { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 2px; }
+.seg button {
+  height: 36px; padding: 0 14px; border: 0; border-right: 1px solid var(--line);
+  background: transparent; cursor: pointer; font-size: 14px; color: var(--muted);
+}
+.seg button:last-child { border-right: 0; }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--ink); margin: 0; }
+/* one column template for header and rows: numbers right-aligned so digits stack */
+.cols-head, .row-btn {
+  display: grid;
+  grid-template-columns: minmax(0, 2.6fr) repeat(3, minmax(0, .7fr)) minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 0 24px; align-items: center;
+}
+.cols-head { padding: 12px 0 10px; border-bottom: 1px solid var(--ink); font-size: 13px; color: var(--muted); }
+.cols-head .r, .row-btn .r { text-align: right; justify-self: end; }
+.cols-head .a, .row-btn .avail { padding-left: 8px; }
+.sort {
+  display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none;
+  font: inherit; color: inherit; cursor: pointer;
+}
+.sort:hover { color: var(--ink); }
+.sort[aria-pressed="true"] { color: var(--ink); font-weight: 600; }
+.sort { position: relative; }
+/* arrow hangs to the left, so the label's right edge stays on the numbers' edge */
+.sort i { font-style: normal; position: absolute; right: 100%; margin-right: 4px; }
+.row-btn { width: 100%; text-align: left; padding: 13px 0; border: 0; background: transparent; cursor: pointer; }
+.row-btn:hover, .row-btn[aria-expanded="true"] { background: var(--raise); }
+.row-btn .name { font-weight: 600; font-size: 16px; }
+.row-btn .tag { font-size: 13px; color: var(--muted); margin-left: 10px; font-weight: 400; }
+.row-btn .num { font-size: 15px; }
+.row-btn .price { font-size: 16px; font-weight: 600; }
+.row-btn .avail { font-size: 14px; color: var(--muted); }
+.item.is-none .name, .item.is-none .num, .item.is-none .price { color: var(--faint); }
+.item.is-none .avail { color: var(--faint); }
+.group-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 26px 0 8px; border-bottom: 1px solid var(--line); }
+.group-h b { font-weight: 600; font-size: 15px; }
+.group-h span { color: var(--muted); font-size: 14px; }
+.filters-r { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.unit { display: flex; align-items: center; gap: 10px; }
+.cfg {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 24px; align-items: end;
+  padding: 18px 0 22px; border-top: 1px dashed var(--line);
+}
+.cfg label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.cfg .total { display: grid; gap: 8px; }
+.cfg .total span { font-size: 13px; color: var(--muted); }
+.cfg .total b { font-size: 24px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+.cfg .total small { font-size: 12px; color: var(--faint); }
+.cfg .pick { height: 44px; background-color: var(--bg); }
+.cat-note { margin-top: 18px; font-size: 14px; color: var(--muted); max-width: 60em; }
+.empty { padding: 28px 0; color: var(--muted); }
+
+/* ---- steps (a real sequence, so numbered) */
+/* ---- getting started: steps on the left, the dashboard screen of the step on the right */
+.walk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 56px; align-items: start; }
+.walk-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.walk-list li { position: relative; border-bottom: 1px solid var(--line); }
+.walk-list button { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 8px; width: 100%; padding: 20px 0; border: 0; background: none; cursor: pointer; text-align: left; font: inherit; color: var(--faint); }
+.walk-list .wn { justify-self: start; padding: 4px 7px; font-size: 32px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.walk-list .wt { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.walk-list b { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.walk-list small { font-size: 14px; }
+.walk-list li p { display: none; margin: -8px 0 20px 60px; color: var(--muted); max-width: 30em; }
+.walk-list li.on button { color: var(--ink); }
+.walk-list li.on .wn { color: var(--brand-ink); background: var(--brand); }
+.walk-list li.on small { color: var(--muted); }
+.walk-list li.on p { display: block; }
+.walk-list button:hover { color: var(--ink); }
+.wbar { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--ink); }
+.walk-list li.on .wbar { width: 100%; transition: width var(--walk, 4.5s) linear; }
+.walk.held .walk-list li.on .wbar, .walk.still .walk-list li.on .wbar { transition: none; }
+
+.screen { border: 1px solid var(--ink); border-radius: 2px; background: var(--raise); position: sticky; top: 96px; }
+.screen-bar { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+.sb-logo { width: auto; height: 16px; fill: var(--brand); flex: none; }
+.sb-user { margin-left: auto; font-weight: 400; color: var(--muted); font-size: 13px; }
+.screen-body { position: relative; min-height: 340px; }
+.pane { position: absolute; inset: 0; padding: 28px; display: grid; gap: 12px; align-content: start; opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
+.pane.on { opacity: 1; visibility: visible; transition: opacity .35s; }
+.p-h { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+.p-label { font-size: 13px; color: var(--muted); }
+.p-field { height: 44px; display: flex; align-items: center; padding: 0 12px; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); }
+.caret { width: 1px; height: 18px; background: var(--ink); margin-left: 1px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.p-btn { height: 44px; display: grid; place-items: center; padding: 0 18px; border: 1px solid var(--ink); border-radius: 2px; font-weight: 600; font-size: 15px; }
+.p-btn.main { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.p-or { text-align: center; color: var(--faint); font-size: 13px; }
+.p-big { font-size: 48px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+.p-rows { display: grid; border-top: 1px solid var(--line); }
+.p-rows div { display: grid; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.p-rows span { color: var(--muted); font-size: 14px; }
+.p-gpu { display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: baseline; padding: 12px 14px; border: 1px solid var(--ink); border-radius: 2px; background: var(--bg); }
+.p-gpu b { font-size: 17px; }
+.p-gpu span { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.p-seg { display: flex; border: 1px solid var(--line); border-radius: 2px; }
+.p-seg span { flex: 1; height: 36px; display: grid; place-items: center; font-size: 14px; color: var(--muted); border-right: 1px solid var(--line); }
+.p-seg span:last-child { border-right: 0; }
+.p-seg .on { background: var(--ink); color: var(--bg); }
+.p-sum { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
+.p-sum > span { display: grid; gap: 6px; }
+.p-sum b { font-size: 30px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.p-srv { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.p-srv b { font-size: 20px; }
+.p-state { font-size: 14px; color: var(--muted); }
+.p-state.ok::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2f9e57; margin-right: 8px; }
+.p-prog { display: block; height: 4px; background: var(--line); margin-bottom: 8px; }
+.p-prog i { display: block; height: 100%; width: 0; background: var(--ink); }
+.p-kv { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.p-kv span { color: var(--muted); font-size: 13px; }
+.p-kv code { font: 14px/1.4 ui-monospace, "SF Mono", Menlo, Consolas, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .pane, .wbar { transition: none !important; } .caret { animation: none; } }
+
+
+.fine { margin-top: 28px; font-size: 14px; color: var(--muted); max-width: 56em; }
+
+/* ---- facts list */
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; margin: 0; }
+.facts div { display: grid; grid-template-columns: 9em 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.facts dt { font-weight: 600; }
+.facts dd { margin: 0; color: var(--muted); }
+
+/* ---- code */
+.dev { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 56px; align-items: start; }
+.dev ul { margin: 18px 0 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+/* terminal window: always dark, like the real thing */
+.term { --t-bg: #0e0f0e; --t-bar: #1a1b19; --t-line: #2c2e2a; --t-ink: #e6e7e1; --t-mute: #8d9089; --t-ok: #7bd88f; --t-y: #ffcc00;
+  border: 1px solid var(--t-line); border-radius: 6px; background: var(--t-bg); overflow: hidden; color: var(--t-ink); }
+.term-bar { display: flex; justify-content: space-between; align-items: center; height: 40px; padding: 0 8px 0 0; background: var(--t-bar); border-bottom: 1px solid var(--t-line); }
+.term-tabs { display: flex; height: 100%; }
+.term-tabs span { display: grid; place-items: center; padding: 0 18px; font: 13px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--t-mute); border-right: 1px solid var(--t-line); }
+.term-tabs .on { background: var(--t-bg); color: var(--t-ink); }
+.term-copy { height: 28px; padding: 0 12px; border: 1px solid var(--t-line); border-radius: 4px; background: transparent; color: var(--t-mute); font: 500 13px/1 "Open Sans", sans-serif; cursor: pointer; }
+.term-copy:hover { color: var(--t-ink); border-color: var(--t-mute); }
+.term-body { margin: 0; padding: 18px 20px 22px; min-height: 300px; font: 14px/1.7 ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-all; color: var(--t-mute); }
+.term-body .pr { color: var(--t-y); }
+.term-body .cmd { color: var(--t-ink); }
+.term-body .ok { color: var(--t-ok); }
+.term-body .cur { display: inline-block; width: .6em; height: 1.1em; background: var(--t-ink); vertical-align: -0.2em; animation: blink 1s steps(1) infinite; }
+
+/* ---- clusters: the one inverted band */
+.band { background: var(--band); color: var(--band-ink); margin: 0 -24px; padding: 72px 24px; box-shadow: 0 0 0 100vmax var(--band); clip-path: inset(0 -100vmax); }
+.band .inner { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; }
+.band h2 { font-size: clamp(30px, 3.8vw, 52px); line-height: 1; letter-spacing: -0.04em; }
+.band p { color: var(--band-muted); margin-top: 24px; max-width: 32em; }
+.band .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+.band .btn { border-color: var(--band-ink); color: var(--band-ink); }
+.band .btn:hover { background: transparent; text-decoration: underline; text-underline-offset: 4px; }
+.band .btn-main { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+.band .btn-main:hover { text-decoration: none; background: #f2c200; }
+.spec { margin: 0; display: grid; align-content: start; }
+.spec div { display: grid; grid-template-columns: 12em 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--band-line); }
+.spec div:first-child { border-top: 1px solid var(--band-line); }
+.spec dt { color: var(--band-muted); }
+.spec dd { margin: 0; font-weight: 500; }
+.b2b { margin-top: 28px; font-size: 15px; color: var(--band-muted); }
+
+/* ---- faq */
+.faq { border-top: 1px solid var(--ink); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 20px 40px 20px 0; position: relative;
+  font-size: 18px; font-weight: 600;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 18px; font-size: 22px; line-height: 1; font-weight: 400; color: var(--muted); }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding: 0 0 22px; color: var(--muted); max-width: 52em; }
+
+/* ---- last call + footer */
+.last { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; align-items: end; padding: 80px 0; border-bottom: 1px solid var(--line); }
+.last h2 { font-size: clamp(32px, 4.4vw, 60px); line-height: 1; letter-spacing: -0.04em; }
+.last p { color: var(--muted); }
+.last .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+footer { padding: 48px 0 40px; display: grid; gap: 40px; font-size: 14px; }
+.f-cols { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr)); gap: 32px; }
+.f-cols h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.f-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.f-cols a { text-decoration: none; color: var(--muted); }
+.f-cols a:hover { color: var(--ink); text-decoration: underline; }
+.f-about p { color: var(--muted); margin-top: 12px; max-width: 26em; }
+.f-about .status { display: inline-block; margin-top: 16px; color: var(--ink); }
+.f-bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+.f-bottom button { background: none; border: 0; padding: 0; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 1000px) {
+  nav.main { display: none; }
+  .hero-below, .s-head, .dev, .band .inner, .last, .walk { grid-template-columns: 1fr; }
+  .walk { gap: 24px; }
+  .screen { position: static; }
+  .hero-below { gap: 32px; }
+    .facts { grid-template-columns: 1fr; }
+  .f-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  body { padding: 0 16px; }
+  .band { margin: 0 -16px; padding: 56px 16px; }
+  .tools .login, .tools .btn-main { display: none; }
+  .hero h1 { white-space: normal; text-wrap: balance; }
+  .q-models { grid-template-columns: 1fr; }
+  .q-models button:nth-last-child(2) { border-bottom: 1px solid var(--line-soft); }
+  .q-foot { grid-template-columns: 1fr; gap: 18px; }
+  .q-foot .btn { width: 100%; }
+  /* phones: the header turns into a row of sort buttons */
+  .cols-head { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 0; }
+  .cols-head > span:first-child, .cols-head > .a { display: none; }
+  .cols-head .r { justify-self: auto; }
+  .sort i { position: static; margin: 0; }
+  .row-btn { grid-template-columns: 1fr auto; grid-template-areas: "name price" "specs avail"; gap: 4px 12px; padding: 12px 0; }
+  .row-btn .name { grid-area: name; }
+  .row-btn .price { grid-area: price; }
+  .row-btn .specs { grid-area: specs; display: flex; gap: 10px; color: var(--muted); }
+  .row-btn .avail { grid-area: avail; text-align: right; }
+    .cfg { grid-template-columns: 1fr 1fr; }
+  .cfg .total, .cfg .btn { grid-column: 1 / -1; }
+  .facts div, .spec div { grid-template-columns: 1fr; gap: 4px; }
+  .f-cols { grid-template-columns: 1fr 1fr; }
+  .f-about { grid-column: 1 / -1; }
+}
+@media (min-width: 721px) { .row-btn .specs { display: contents; } .row-btn .specs-m { display: none; } }
+@media (max-width: 720px) { .row-btn .c-vram, .row-btn .c-ram, .row-btn .c-cpu { display: none; } }
+
+/* ===================== tablets and phones (last, so these win) ===================== */
+.burger { display: none; width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: 2px; background: transparent; cursor: pointer; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
+.burger i { display: block; width: 18px; height: 1.5px; background: var(--ink); transition: transform .2s, opacity .2s; }
+.burger[aria-expanded="true"] i:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger[aria-expanded="true"] i:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] i:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.drawer { position: absolute; left: 0; right: 0; top: 100%; background: var(--bg); border-bottom: 1px solid var(--ink); padding: 8px 0 24px; box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax -1px); }
+.drawer nav { display: grid; }
+.drawer nav a { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 20px; font-weight: 600; text-decoration: none; letter-spacing: -0.01em; }
+.drawer-set { display: none; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+.drawer-set label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.drawer-set .pick { width: 100%; height: 44px; font-size: 15px; }
+.drawer-act { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+header.top { flex-wrap: nowrap; }
+/* the header clips to its own height for the full-width fill; with the menu open it covers the page below */
+body.menu-open header.top { clip-path: inset(0 -100vmax -100vh); }
+body.menu-open { overflow: hidden; }
+.tools { flex: none; }
+
+@media (max-width: 1100px) {
+  nav.main { display: none; }
+  .tools .login { display: none; }
+  .burger { display: inline-flex; }
+}
+@media (min-width: 1101px) { .drawer { display: none !important; } }
+
+/* tablets (incl. iPad landscape): the drawing opens the page, centred, and dissolves below */
+@media (max-width: 1100px) {
+  .hero { padding: 8px 0 40px; }
+  .hero-top { grid-template-columns: 1fr; gap: 8px; }
+  .hero-top .hero-text { max-width: 640px; position: relative; z-index: 1; }
+  /* side padding widens the masked box so the scene's faded edges are not cut straight */
+  .art { order: -1; justify-self: center; box-sizing: content-box; width: min(860px, 112%); padding: 0 30vw; margin: -10px -30vw -110px; position: relative; z-index: 0;
+    left: calc(min(860px, 112%) * .009); /* the scene's visual centre sits a little left of its box */
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 96%); mask-image: linear-gradient(to bottom, #000 55%, transparent 96%); }
+}
+/* tablets */
+@media (max-width: 1000px) {
+  .q-models { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+  .q-models button:nth-last-child(-n+3) { border-bottom: 1px solid var(--line-soft); }
+  .q-models button:nth-last-child(-n+2) { border-bottom: 0; }
+  .q-foot { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .q-foot .btn { grid-column: 1 / -1; width: 100%; }
+  section.s { padding: 48px 0; }
+  .walk { grid-template-columns: 1fr; gap: 24px; }
+  .screen { position: static; }
+  .facts { grid-template-columns: 1fr; }
+  .dev { grid-template-columns: 1fr; gap: 28px; }
+  .f-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .f-about { grid-column: 1 / -1; }
+}
+/* catalogue rows become two-line cards below 900 */
+@media (max-width: 900px) {
+  .cols-head { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 0; }
+  .cols-head > span:first-child, .cols-head > .a { display: none; }
+  .cols-head .r { justify-self: auto; }
+  .sort i { position: static; margin: 0; }
+  .row-btn { grid-template-columns: 1fr auto; grid-template-areas: "name price" "specs avail"; gap: 4px 12px; padding: 12px 0; }
+  .row-btn .name { grid-area: name; }
+  .row-btn .price { grid-area: price; }
+  .row-btn .specs { grid-area: specs; display: flex; gap: 10px; color: var(--muted); font-size: 14px; }
+  .row-btn .specs-m { display: inline; }
+  .row-btn .c-vram, .row-btn .c-ram, .row-btn .c-cpu { display: none; }
+  .row-btn .avail { grid-area: avail; text-align: right; padding-left: 0; }
+  .filters { gap: 12px; }
+  .filters-r { width: 100%; justify-content: space-between; }
+  .cfg { grid-template-columns: 1fr 1fr; }
+  .cfg .total, .cfg .btn { grid-column: 1 / -1; }
+}
+/* phones */
+@media (max-width: 600px) {
+  body { padding: 0 16px; }
+  .band { margin: 0 -16px; padding: 56px 16px; }
+  header.top { gap: 8px; padding: 12px 0; }
+  .logo svg { height: 22px; }
+  .tools { gap: 6px; }
+  .tools .btn-main, .tools .pick { display: none; }
+  .drawer-set { display: grid; }
+  .pick { height: 40px; padding: 0 22px 0 8px; background-position: right 7px center; font-size: 13px; }
+  .hero { padding: 28px 0 32px; }
+  .hero .lead { font-size: 17px; }
+  /* phones: the drawing opens the page and dissolves into the background at the bottom,
+     the headline starts on that fade */
+  .hero { padding-top: 8px; }
+  .art { order: -1; width: 150%; margin: -10px -25% -96px; left: calc(150% * .008); position: relative; z-index: 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%); mask-image: linear-gradient(to bottom, #000 52%, transparent 96%); }
+  .hero-top .hero-text { position: relative; z-index: 1; }
+  .q-models { grid-template-columns: 1fr; }
+  .q-models button:nth-last-child(2) { border-bottom: 1px solid var(--line-soft); }
+  .q-foot { grid-template-columns: 1fr; gap: 18px; }
+  .q-sum b { font-size: 30px; }
+  .walk-list b { font-size: 19px; }
+  .walk-list .wn { font-size: 26px; }
+  .walk-list button { grid-template-columns: 44px minmax(0, 1fr); padding: 16px 0; }
+  .walk-list li p { margin-left: 52px; }
+  .screen-body { min-height: 320px; }
+  .pane { padding: 20px; }
+  .p-big { font-size: 38px; }
+  .p-gpu { grid-template-columns: 1fr auto; }
+  .p-gpu #mHour { grid-column: 1 / -1; }
+  .p-sum { flex-direction: column; align-items: stretch; }
+  .term-tabs span:nth-child(2) { display: none; }
+  .term-body { font-size: 12.5px; padding: 14px 14px 18px; min-height: 260px; }
+  .faq summary { font-size: 16px; }
+  .drawer-act { grid-template-columns: 1fr; }
+  /* class filter: one scrollable row; side padding keeps the focus ring inside the scroll box */
+  #groups { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  #groups::-webkit-scrollbar { display: none; }
+  #groups button { flex: none; white-space: nowrap; }
+  #groups button:focus-visible { outline-offset: -3px; }
+  .f-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
+}
+@media (max-width: 360px) {
+  .logo-word { display: none; }
+  .drawer nav a { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="notice" id="noticeBar" hidden>
+    <p class="notice-text" id="notice"></p>
+    <div class="notice-act">
+      <a href="#catalog" id="noticeGo" data-t="notice_link"></a>
+      <button type="button" class="notice-x" id="noticeX" data-t-label="notice_close">×</button>
+    </div>
+  </div>
+
+  <header class="top">
+    <a class="logo" href="#" aria-label="NodeCloud"><svg class="logo-mark" viewBox="0 0 60 36" aria-hidden="true"><path d="M36 6C36 2.68629 38.6863 0 42 0C45.3137 0 48 2.68629 48 6C48 9.31371 50.6863 12 54 12C57.3137 12 60 14.6863 60 18C60 21.3137 57.3137 24 54 24C50.6863 24 48 26.6863 48 30C48 33.3137 45.3137 36 42 36C38.6863 36 36 33.3137 36 30C36 26.6863 33.3137 24 30 24C26.6863 24 24 21.3137 24 18C24 14.6863 21.3137 12 18 12C14.6863 12 12 14.6863 12 18C12 21.3137 14.6863 24 18 24C21.3137 24 24 26.6863 24 30C24 33.3137 21.3137 36 18 36C14.6863 36 12 33.3137 12 30C12 26.6863 9.31371 24 6 24C2.68629 24 0 21.3137 0 18C0 14.6863 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 14.6863 0 18 0C21.3137 0 24 2.68629 24 6C24 9.31371 26.6863 12 30 12C33.3137 12 36 14.6863 36 18C36 21.3137 38.6863 24 42 24C45.3137 24 48 21.3137 48 18C48 14.6863 45.3137 12 42 12C38.6863 12 36 9.31371 36 6Z"/></svg><svg class="logo-word" viewBox="69 0 118 36" aria-hidden="true"><path d="M83.8135 26.7716H79.3135L72.0495 14.1396H71.9467C71.9772 14.665 72.0038 15.1942 72.0266 15.7272C72.0495 16.2602 72.0723 16.7931 72.0952 17.3261C72.118 17.8515 72.1409 18.3807 72.1637 18.9137V26.7716H69V10.0736H73.4657L80.7183 22.5799H80.7982C80.783 22.0622 80.764 21.5482 80.7411 21.0381C80.7183 20.5279 80.6954 20.0178 80.6726 19.5076C80.6574 18.9975 80.6421 18.4873 80.6269 17.9772V10.0736H83.8135V26.7716Z"/><path d="M98.4222 20.3642C98.4222 21.4302 98.2776 22.3744 97.9882 23.1967C97.7065 24.019 97.2915 24.7157 96.7433 25.2868C96.2027 25.8503 95.5479 26.2767 94.7788 26.566C94.0174 26.8553 93.157 27 92.1976 27C91.2991 27 90.473 26.8553 89.7192 26.566C88.973 26.2767 88.322 25.8503 87.7661 25.2868C87.2179 24.7157 86.7915 24.019 86.487 23.1967C86.19 22.3744 86.0415 21.4302 86.0415 20.3642C86.0415 18.948 86.2928 17.7487 86.7953 16.7665C87.2979 15.7843 88.0136 15.0381 88.9425 14.5279C89.8715 14.0178 90.9793 13.7627 92.2661 13.7627C93.4616 13.7627 94.5199 14.0178 95.4413 14.5279C96.3702 15.0381 97.0974 15.7843 97.6227 16.7665C98.1557 17.7487 98.4222 18.948 98.4222 20.3642ZM89.5936 20.3642C89.5936 21.2018 89.6849 21.9061 89.8677 22.4772C90.0504 23.0482 90.3359 23.4784 90.7243 23.7678C91.1126 24.0571 91.6189 24.2018 92.2433 24.2018C92.86 24.2018 93.3588 24.0571 93.7395 23.7678C94.1278 23.4784 94.4095 23.0482 94.5847 22.4772C94.7674 21.9061 94.8588 21.2018 94.8588 20.3642C94.8588 19.519 94.7674 18.8185 94.5847 18.2627C94.4095 17.6992 94.1278 17.2767 93.7395 16.9949C93.3512 16.7132 92.8448 16.5723 92.2205 16.5723C91.2991 16.5723 90.6291 16.8883 90.2103 17.5203C89.7991 18.1523 89.5936 19.1003 89.5936 20.3642Z"/><path d="M104.408 27C102.984 27 101.823 26.4442 100.924 25.3325C100.034 24.2132 99.5881 22.5723 99.5881 20.4099C99.5881 18.2246 100.041 16.5723 100.947 15.453C101.853 14.3261 103.037 13.7627 104.499 13.7627C105.108 13.7627 105.645 13.8464 106.11 14.014C106.574 14.1815 106.974 14.4061 107.309 14.6878C107.652 14.9695 107.941 15.2855 108.177 15.6358H108.291C108.245 15.3921 108.188 15.0343 108.12 14.5622C108.059 14.0825 108.028 13.5914 108.028 13.0888V9H111.523V26.7716H108.851L108.177 25.1155H108.028C107.808 25.4657 107.53 25.7855 107.195 26.0749C106.867 26.3566 106.475 26.5812 106.018 26.7487C105.561 26.9162 105.025 27 104.408 27ZM105.63 24.2246C106.582 24.2246 107.252 23.9429 107.64 23.3794C108.036 22.8084 108.245 21.9518 108.268 20.8096V20.4327C108.268 19.1916 108.078 18.2437 107.697 17.5888C107.317 16.9264 106.608 16.5952 105.573 16.5952C104.804 16.5952 104.202 16.9264 103.768 17.5888C103.334 18.2513 103.117 19.2069 103.117 20.4556C103.117 21.7043 103.334 22.6447 103.768 23.2767C104.21 23.9086 104.831 24.2246 105.63 24.2246Z"/><path d="M119.496 13.7627C120.677 13.7627 121.693 13.9911 122.546 14.448C123.399 14.8972 124.057 15.552 124.522 16.4124C124.986 17.2728 125.218 18.3236 125.218 19.5647V21.2551H116.984C117.022 22.2373 117.315 23.0102 117.863 23.5736C118.419 24.1294 119.188 24.4074 120.17 24.4074C120.985 24.4074 121.731 24.3236 122.409 24.1561C123.086 23.9886 123.783 23.7373 124.499 23.4023V26.0977C123.867 26.4099 123.205 26.6383 122.512 26.783C121.826 26.9277 120.993 27 120.01 27C118.731 27 117.597 26.764 116.607 26.2919C115.625 25.8198 114.852 25.1003 114.288 24.1332C113.732 23.1662 113.455 21.948 113.455 20.4784C113.455 18.986 113.706 17.7449 114.208 16.7551C114.718 15.7576 115.427 15.0114 116.333 14.5165C117.239 14.014 118.293 13.7627 119.496 13.7627ZM119.519 16.2411C118.842 16.2411 118.278 16.4581 117.829 16.8921C117.387 17.3261 117.132 18.0076 117.064 18.9365H121.952C121.944 18.4188 121.849 17.9581 121.666 17.5546C121.491 17.151 121.225 16.8312 120.867 16.5952C120.517 16.3591 120.067 16.2411 119.519 16.2411Z"/><path d="M134.482 12.7805C133.804 12.7805 133.203 12.9137 132.678 13.1802C132.16 13.4391 131.722 13.816 131.364 14.3109C131.014 14.8058 130.747 15.4036 130.565 16.1041C130.382 16.8046 130.29 17.5926 130.29 18.4683C130.29 19.6485 130.435 20.6574 130.724 21.4949C131.021 22.3249 131.478 22.9607 132.095 23.4023C132.712 23.8363 133.507 24.0533 134.482 24.0533C135.16 24.0533 135.837 23.9772 136.515 23.8249C137.2 23.6726 137.943 23.4556 138.742 23.1739V26.1434C138.004 26.448 137.276 26.665 136.561 26.7944C135.845 26.9315 135.042 27 134.151 27C132.43 27 131.014 26.6459 129.902 25.9378C128.798 25.2221 127.98 24.2246 127.447 22.9454C126.914 21.6586 126.647 20.1586 126.647 18.4454C126.647 17.1815 126.818 16.0241 127.161 14.9734C127.504 13.9226 128.006 13.0127 128.669 12.2437C129.331 11.4746 130.15 10.8807 131.124 10.4619C132.099 10.0431 133.218 9.83376 134.482 9.83376C135.312 9.83376 136.142 9.94036 136.972 10.1536C137.809 10.3591 138.609 10.6447 139.37 11.0102L138.228 13.8883C137.604 13.5914 136.976 13.3325 136.344 13.1117C135.712 12.8909 135.091 12.7805 134.482 12.7805Z"/><path d="M144.579 26.7716H141.096V9H144.579V26.7716Z"/><path d="M158.914 20.3642C158.914 21.4302 158.769 22.3744 158.48 23.1967C158.198 24.019 157.783 24.7157 157.235 25.2868C156.695 25.8503 156.04 26.2767 155.271 26.566C154.509 26.8553 153.649 27 152.689 27C151.791 27 150.965 26.8553 150.211 26.566C149.465 26.2767 148.814 25.8503 148.258 25.2868C147.71 24.7157 147.283 24.019 146.979 23.1967C146.682 22.3744 146.533 21.4302 146.533 20.3642C146.533 18.948 146.785 17.7487 147.287 16.7665C147.79 15.7843 148.505 15.0381 149.434 14.5279C150.363 14.0178 151.471 13.7627 152.758 13.7627C153.953 13.7627 155.012 14.0178 155.933 14.5279C156.862 15.0381 157.589 15.7843 158.115 16.7665C158.648 17.7487 158.914 18.948 158.914 20.3642ZM150.085 20.3642C150.085 21.2018 150.177 21.9061 150.36 22.4772C150.542 23.0482 150.828 23.4784 151.216 23.7678C151.604 24.0571 152.111 24.2018 152.735 24.2018C153.352 24.2018 153.851 24.0571 154.231 23.7678C154.62 23.4784 154.901 23.0482 155.077 22.4772C155.259 21.9061 155.351 21.2018 155.351 20.3642C155.351 19.519 155.259 18.8185 155.077 18.2627C154.901 17.6992 154.62 17.2767 154.231 16.9949C153.843 16.7132 153.337 16.5723 152.712 16.5723C151.791 16.5723 151.121 16.8883 150.702 17.5203C150.291 18.1523 150.085 19.1003 150.085 20.3642Z"/><path d="M172.575 14.0025V26.7716H169.902L169.434 25.1383H169.251C168.977 25.5723 168.635 25.9264 168.223 26.2005C167.812 26.4746 167.359 26.6764 166.864 26.8058C166.369 26.9353 165.855 27 165.322 27C164.409 27 163.613 26.8401 162.935 26.5203C162.258 26.1929 161.728 25.6865 161.348 25.0013C160.975 24.316 160.788 23.4251 160.788 22.3287V14.0025H164.272V21.4607C164.272 22.3744 164.435 23.0635 164.763 23.5279C165.09 23.9924 165.612 24.2246 166.327 24.2246C167.036 24.2246 167.591 24.0647 167.995 23.7449C168.399 23.4175 168.68 22.9416 168.84 22.3173C169.008 21.6853 169.091 20.9162 169.091 20.0102V14.0025H172.575Z"/><path d="M179.337 27C177.913 27 176.752 26.4442 175.854 25.3325C174.963 24.2132 174.517 22.5723 174.517 20.4099C174.517 18.2246 174.971 16.5723 175.877 15.453C176.783 14.3261 177.967 13.7627 179.429 13.7627C180.038 13.7627 180.575 13.8464 181.039 14.014C181.503 14.1815 181.903 14.4061 182.238 14.6878C182.581 14.9695 182.87 15.2855 183.106 15.6358H183.221C183.175 15.3921 183.118 15.0343 183.049 14.5622C182.988 14.0825 182.958 13.5914 182.958 13.0888V9H186.453V26.7716H183.78L183.106 25.1155H182.958C182.737 25.4657 182.459 25.7855 182.124 26.0749C181.797 26.3566 181.405 26.5812 180.948 26.7487C180.491 26.9162 179.954 27 179.337 27ZM180.559 24.2246C181.511 24.2246 182.181 23.9429 182.569 23.3794C182.965 22.8084 183.175 21.9518 183.198 20.8096V20.4327C183.198 19.1916 183.007 18.2437 182.627 17.5888C182.246 16.9264 181.538 16.5952 180.502 16.5952C179.733 16.5952 179.132 16.9264 178.698 17.5888C178.264 18.2513 178.047 19.2069 178.047 20.4556C178.047 21.7043 178.264 22.6447 178.698 23.2767C179.139 23.9086 179.76 24.2246 180.559 24.2246Z"/></svg></a>
+    <nav class="main">
+      <a href="#catalog" data-t="nav_catalog"></a>
+      <a href="#start" data-t="nav_start"></a>
+      <a href="#clusters" data-t="nav_clusters"></a>
+      <a href="#dev" data-t="nav_dev"></a>
+      <a href="#faq" data-t="nav_faq"></a>
+    </nav>
+    <div class="tools">
+      <select id="lang" class="pick" aria-label="Язык"></select>
+      <select id="cur" class="pick" aria-label="Валюта"></select>
+      <a class="login" href="#" data-t="login"></a>
+      <a class="btn btn-main btn-sm" href="#catalog" data-t="launch"></a>
+      <button type="button" class="burger" id="burger" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
+    </div>
+    <div class="drawer" id="drawer" hidden>
+      <nav>
+        <a href="#catalog" data-t="nav_catalog"></a>
+        <a href="#start" data-t="nav_start"></a>
+        <a href="#clusters" data-t="nav_clusters"></a>
+        <a href="#dev" data-t="nav_dev"></a>
+        <a href="#faq" data-t="nav_faq"></a>
+      </nav>
+      <div class="drawer-set">
+        <label><span data-t="lang_label"></span><select id="lang2" class="pick"></select></label>
+        <label><span data-t="cur_label"></span><select id="cur2" class="pick"></select></label>
+      </div>
+      <div class="drawer-act">
+        <a class="btn" href="#" data-t="login"></a>
+        <a class="btn btn-main" href="#catalog" data-t="launch"></a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-top">
+      <div class="hero-text">
+        <h1 data-t="h1"></h1>
+        <p class="lead" data-t="lead"></p>
+        <p class="pay" data-t="pay"></p>
+        <div class="links">
+          <a href="#catalog" data-t="hero_all"></a>
+          <a href="#clusters" data-t="hero_clusters"></a>
+        </div>
+      </div>
+      <figure class="art" id="art" aria-labelledby="artCap">
+        <svg id="artSvg" role="img" aria-labelledby="artCap"></svg>
+        <svg id="artFx" aria-hidden="true"></svg>
+        <figcaption class="sr" id="artCap"></figcaption>
+      </figure>
+    </div>
+    <div class="hero-below">
+      <form class="quick" id="quick" aria-labelledby="quickTitle">
+        <div class="q-row">
+          <span class="q-label" id="quickTitle" data-t="hero_gpu"></span>
+          <div class="q-models" id="qModels" role="radiogroup" aria-labelledby="quickTitle"></div>
+        </div>
+        <div class="q-foot">
+          <div class="q-per">
+            <span class="q-label" id="qPeriodLabel" data-t="period"></span>
+            <div class="seg q-period" id="qPeriod" role="radiogroup" aria-labelledby="qPeriodLabel"></div>
+          </div>
+          <div class="q-sum">
+            <span class="q-label" data-t="hero_total"></span>
+            <b id="qTotal"></b>
+            <span class="q-spec" id="qSpec"></span>
+          </div>
+          <button type="submit" class="btn btn-main" id="qGo"></button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="s" id="catalog">
+    <div class="s-head s-head-stack">
+      <h2 data-t="cat_h"></h2>
+      <p data-t="cat_p"></p>
+    </div>
+    <div class="filters">
+      <div class="seg" id="groups" role="group"></div>
+      <div class="filters-r">
+        <div class="unit"><span class="q-label" id="unitLabel" data-t="unit_label"></span><div class="seg" id="unit" role="group" aria-labelledby="unitLabel"></div></div>
+        <label class="check"><input type="checkbox" id="hideNone"><span data-t="hide_none"></span></label>
+      </div>
+    </div>
+    <div class="cols-head" id="colsHead"></div>
+    <div id="rows"></div>
+    <p class="cat-note" id="catNote"></p>
+  </section>
+
+  <section class="s" id="start">
+    <div class="s-head">
+      <h2 data-t="start_h"></h2>
+      <p data-t="start_p"></p>
+    </div>
+    <div class="walk" id="walk">
+      <ol class="walk-list" id="walkList">
+        <li data-step="0"><button type="button"><span class="wn">1</span><span class="wt"><b data-t="st1_h"></b><small data-t="st1_t"></small></span></button><p data-t="st1_p"></p><i class="wbar"></i></li>
+        <li data-step="1"><button type="button"><span class="wn">2</span><span class="wt"><b data-t="st2_h"></b><small data-t="st2_t"></small></span></button><p data-t="st2_p"></p><i class="wbar"></i></li>
+        <li data-step="2"><button type="button"><span class="wn">3</span><span class="wt"><b data-t="st3_h"></b><small data-t="st3_t"></small></span></button><p data-t="st3_p"></p><i class="wbar"></i></li>
+        <li data-step="3"><button type="button"><span class="wn">4</span><span class="wt"><b data-t="st4_h"></b><small data-t="st4_t"></small></span></button><p data-t="st4_p"></p><i class="wbar"></i></li>
+      </ol>
+      <div class="screen" aria-hidden="true">
+        <div class="screen-bar"><svg class="sb-logo" viewBox="0 0 60 36" aria-hidden="true"><path d="M36 6C36 2.68629 38.6863 0 42 0C45.3137 0 48 2.68629 48 6C48 9.31371 50.6863 12 54 12C57.3137 12 60 14.6863 60 18C60 21.3137 57.3137 24 54 24C50.6863 24 48 26.6863 48 30C48 33.3137 45.3137 36 42 36C38.6863 36 36 33.3137 36 30C36 26.6863 33.3137 24 30 24C26.6863 24 24 21.3137 24 18C24 14.6863 21.3137 12 18 12C14.6863 12 12 14.6863 12 18C12 21.3137 14.6863 24 18 24C21.3137 24 24 26.6863 24 30C24 33.3137 21.3137 36 18 36C14.6863 36 12 33.3137 12 30C12 26.6863 9.31371 24 6 24C2.68629 24 0 21.3137 0 18C0 14.6863 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 14.6863 0 18 0C21.3137 0 24 2.68629 24 6C24 9.31371 26.6863 12 30 12C33.3137 12 36 14.6863 36 18C36 21.3137 38.6863 24 42 24C45.3137 24 48 21.3137 48 18C48 14.6863 45.3137 12 42 12C38.6863 12 36 9.31371 36 6Z"/></svg><span id="scrTitle"></span><span class="sb-user">you@example.com</span></div>
+        <div class="screen-body">
+          <div class="pane" data-pane="0">
+            <b class="p-h" data-t="p1_h"></b>
+            <label class="p-label" data-t="m_mail"></label>
+            <span class="p-field"><span id="typeMail"></span><i class="caret"></i></span>
+            <span class="p-btn main" data-t="m_signin"></span>
+            <span class="p-or" data-t="p1_or"></span>
+            <span class="p-btn" data-t="m_tg"></span>
+          </div>
+          <div class="pane" data-pane="1">
+            <span class="p-label" data-t="m_balance"></span>
+            <b class="p-big" id="mBalance"></b>
+            <div class="p-rows">
+              <div><b data-t="m_transfer"></b><span data-t="p2_transfer"></span></div>
+              <div><b data-t="m_crypto"></b><span data-t="p2_crypto"></span></div>
+            </div>
+          </div>
+          <div class="pane" data-pane="2">
+            <span class="p-label" data-t="p3_gpu"></span>
+            <div class="p-gpu"><b id="mModel"></b><span id="mMem"></span><span id="mHour"></span></div>
+            <span class="p-label" data-t="m_period"></span>
+            <div class="p-seg" id="mSeg"></div>
+            <div class="p-sum"><span><span class="p-label" data-t="hero_total"></span><b id="mTotal"></b></span><span class="p-btn main" id="mGo"></span></div>
+          </div>
+          <div class="pane" data-pane="3">
+            <div class="p-srv"><b id="mSrv"></b><span class="p-state" id="mState"></span></div>
+            <i class="p-prog"><i id="mProg"></i></i>
+            <div class="p-kv"><span>IP</span><code>185.12.44.91</code></div>
+            <div class="p-kv"><span>SSH</span><code>ssh root@185.12.44.91</code></div>
+            <div class="p-kv"><span>Jupyter</span><code>jupyter.gnode.cloud/j-8f2a</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="fine" data-t="start_fine"></p>
+  </section>
+
+  <section class="s" id="ready">
+    <div class="s-head">
+      <h2 data-t="ready_h"></h2>
+      <p data-t="ready_p"></p>
+    </div>
+    <dl class="facts" id="facts"></dl>
+  </section>
+
+  <section class="s" id="dev">
+    <div class="dev">
+      <div>
+        <div class="s-head" style="grid-template-columns:1fr;margin-bottom:0">
+          <h2 data-t="dev_h"></h2>
+          <p data-t="dev_p"></p>
+        </div>
+        <ul id="devList"></ul>
+      </div>
+      <div class="term" id="term">
+        <div class="term-bar">
+          <div class="term-tabs"><span class="on">bash</span><span>jupyter</span></div>
+          <button type="button" class="term-copy" id="termCopy" data-t="copy_cmd"></button>
+        </div>
+        <pre class="term-body" id="termBody" aria-label="Terminal"></pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="band" id="clusters">
+    <div class="inner">
+      <div>
+        <h2 data-t="cl_h"></h2>
+        <p data-t="cl_p"></p>
+        <div class="actions">
+          <a class="btn btn-main" href="#" data-t="cl_cta"></a>
+        </div>
+      </div>
+      <div>
+        <dl class="spec" id="spec"></dl>
+        <p class="b2b" data-t="b2b"></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="s" id="faq">
+    <div class="s-head">
+      <h2 data-t="faq_h"></h2>
+      <p data-t="faq_p"></p>
+    </div>
+    <div class="faq" id="faqList"></div>
+  </section>
+
+  <section class="last">
+    <h2 data-t="last_h"></h2>
+    <div>
+      <p data-t="last_p"></p>
+      <div class="actions">
+        <a class="btn btn-main" href="#" data-t="signup"></a>
+        <a class="btn" href="#clusters" data-t="sales"></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="f-cols">
+      <div class="f-about">
+        <a class="logo" href="#" aria-label="NodeCloud"><svg class="logo-mark" viewBox="0 0 60 36" aria-hidden="true"><path d="M36 6C36 2.68629 38.6863 0 42 0C45.3137 0 48 2.68629 48 6C48 9.31371 50.6863 12 54 12C57.3137 12 60 14.6863 60 18C60 21.3137 57.3137 24 54 24C50.6863 24 48 26.6863 48 30C48 33.3137 45.3137 36 42 36C38.6863 36 36 33.3137 36 30C36 26.6863 33.3137 24 30 24C26.6863 24 24 21.3137 24 18C24 14.6863 21.3137 12 18 12C14.6863 12 12 14.6863 12 18C12 21.3137 14.6863 24 18 24C21.3137 24 24 26.6863 24 30C24 33.3137 21.3137 36 18 36C14.6863 36 12 33.3137 12 30C12 26.6863 9.31371 24 6 24C2.68629 24 0 21.3137 0 18C0 14.6863 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 14.6863 0 18 0C21.3137 0 24 2.68629 24 6C24 9.31371 26.6863 12 30 12C33.3137 12 36 14.6863 36 18C36 21.3137 38.6863 24 42 24C45.3137 24 48 21.3137 48 18C48 14.6863 45.3137 12 42 12C38.6863 12 36 9.31371 36 6Z"/></svg><svg class="logo-word" viewBox="69 0 118 36" aria-hidden="true"><path d="M83.8135 26.7716H79.3135L72.0495 14.1396H71.9467C71.9772 14.665 72.0038 15.1942 72.0266 15.7272C72.0495 16.2602 72.0723 16.7931 72.0952 17.3261C72.118 17.8515 72.1409 18.3807 72.1637 18.9137V26.7716H69V10.0736H73.4657L80.7183 22.5799H80.7982C80.783 22.0622 80.764 21.5482 80.7411 21.0381C80.7183 20.5279 80.6954 20.0178 80.6726 19.5076C80.6574 18.9975 80.6421 18.4873 80.6269 17.9772V10.0736H83.8135V26.7716Z"/><path d="M98.4222 20.3642C98.4222 21.4302 98.2776 22.3744 97.9882 23.1967C97.7065 24.019 97.2915 24.7157 96.7433 25.2868C96.2027 25.8503 95.5479 26.2767 94.7788 26.566C94.0174 26.8553 93.157 27 92.1976 27C91.2991 27 90.473 26.8553 89.7192 26.566C88.973 26.2767 88.322 25.8503 87.7661 25.2868C87.2179 24.7157 86.7915 24.019 86.487 23.1967C86.19 22.3744 86.0415 21.4302 86.0415 20.3642C86.0415 18.948 86.2928 17.7487 86.7953 16.7665C87.2979 15.7843 88.0136 15.0381 88.9425 14.5279C89.8715 14.0178 90.9793 13.7627 92.2661 13.7627C93.4616 13.7627 94.5199 14.0178 95.4413 14.5279C96.3702 15.0381 97.0974 15.7843 97.6227 16.7665C98.1557 17.7487 98.4222 18.948 98.4222 20.3642ZM89.5936 20.3642C89.5936 21.2018 89.6849 21.9061 89.8677 22.4772C90.0504 23.0482 90.3359 23.4784 90.7243 23.7678C91.1126 24.0571 91.6189 24.2018 92.2433 24.2018C92.86 24.2018 93.3588 24.0571 93.7395 23.7678C94.1278 23.4784 94.4095 23.0482 94.5847 22.4772C94.7674 21.9061 94.8588 21.2018 94.8588 20.3642C94.8588 19.519 94.7674 18.8185 94.5847 18.2627C94.4095 17.6992 94.1278 17.2767 93.7395 16.9949C93.3512 16.7132 92.8448 16.5723 92.2205 16.5723C91.2991 16.5723 90.6291 16.8883 90.2103 17.5203C89.7991 18.1523 89.5936 19.1003 89.5936 20.3642Z"/><path d="M104.408 27C102.984 27 101.823 26.4442 100.924 25.3325C100.034 24.2132 99.5881 22.5723 99.5881 20.4099C99.5881 18.2246 100.041 16.5723 100.947 15.453C101.853 14.3261 103.037 13.7627 104.499 13.7627C105.108 13.7627 105.645 13.8464 106.11 14.014C106.574 14.1815 106.974 14.4061 107.309 14.6878C107.652 14.9695 107.941 15.2855 108.177 15.6358H108.291C108.245 15.3921 108.188 15.0343 108.12 14.5622C108.059 14.0825 108.028 13.5914 108.028 13.0888V9H111.523V26.7716H108.851L108.177 25.1155H108.028C107.808 25.4657 107.53 25.7855 107.195 26.0749C106.867 26.3566 106.475 26.5812 106.018 26.7487C105.561 26.9162 105.025 27 104.408 27ZM105.63 24.2246C106.582 24.2246 107.252 23.9429 107.64 23.3794C108.036 22.8084 108.245 21.9518 108.268 20.8096V20.4327C108.268 19.1916 108.078 18.2437 107.697 17.5888C107.317 16.9264 106.608 16.5952 105.573 16.5952C104.804 16.5952 104.202 16.9264 103.768 17.5888C103.334 18.2513 103.117 19.2069 103.117 20.4556C103.117 21.7043 103.334 22.6447 103.768 23.2767C104.21 23.9086 104.831 24.2246 105.63 24.2246Z"/><path d="M119.496 13.7627C120.677 13.7627 121.693 13.9911 122.546 14.448C123.399 14.8972 124.057 15.552 124.522 16.4124C124.986 17.2728 125.218 18.3236 125.218 19.5647V21.2551H116.984C117.022 22.2373 117.315 23.0102 117.863 23.5736C118.419 24.1294 119.188 24.4074 120.17 24.4074C120.985 24.4074 121.731 24.3236 122.409 24.1561C123.086 23.9886 123.783 23.7373 124.499 23.4023V26.0977C123.867 26.4099 123.205 26.6383 122.512 26.783C121.826 26.9277 120.993 27 120.01 27C118.731 27 117.597 26.764 116.607 26.2919C115.625 25.8198 114.852 25.1003 114.288 24.1332C113.732 23.1662 113.455 21.948 113.455 20.4784C113.455 18.986 113.706 17.7449 114.208 16.7551C114.718 15.7576 115.427 15.0114 116.333 14.5165C117.239 14.014 118.293 13.7627 119.496 13.7627ZM119.519 16.2411C118.842 16.2411 118.278 16.4581 117.829 16.8921C117.387 17.3261 117.132 18.0076 117.064 18.9365H121.952C121.944 18.4188 121.849 17.9581 121.666 17.5546C121.491 17.151 121.225 16.8312 120.867 16.5952C120.517 16.3591 120.067 16.2411 119.519 16.2411Z"/><path d="M134.482 12.7805C133.804 12.7805 133.203 12.9137 132.678 13.1802C132.16 13.4391 131.722 13.816 131.364 14.3109C131.014 14.8058 130.747 15.4036 130.565 16.1041C130.382 16.8046 130.29 17.5926 130.29 18.4683C130.29 19.6485 130.435 20.6574 130.724 21.4949C131.021 22.3249 131.478 22.9607 132.095 23.4023C132.712 23.8363 133.507 24.0533 134.482 24.0533C135.16 24.0533 135.837 23.9772 136.515 23.8249C137.2 23.6726 137.943 23.4556 138.742 23.1739V26.1434C138.004 26.448 137.276 26.665 136.561 26.7944C135.845 26.9315 135.042 27 134.151 27C132.43 27 131.014 26.6459 129.902 25.9378C128.798 25.2221 127.98 24.2246 127.447 22.9454C126.914 21.6586 126.647 20.1586 126.647 18.4454C126.647 17.1815 126.818 16.0241 127.161 14.9734C127.504 13.9226 128.006 13.0127 128.669 12.2437C129.331 11.4746 130.15 10.8807 131.124 10.4619C132.099 10.0431 133.218 9.83376 134.482 9.83376C135.312 9.83376 136.142 9.94036 136.972 10.1536C137.809 10.3591 138.609 10.6447 139.37 11.0102L138.228 13.8883C137.604 13.5914 136.976 13.3325 136.344 13.1117C135.712 12.8909 135.091 12.7805 134.482 12.7805Z"/><path d="M144.579 26.7716H141.096V9H144.579V26.7716Z"/><path d="M158.914 20.3642C158.914 21.4302 158.769 22.3744 158.48 23.1967C158.198 24.019 157.783 24.7157 157.235 25.2868C156.695 25.8503 156.04 26.2767 155.271 26.566C154.509 26.8553 153.649 27 152.689 27C151.791 27 150.965 26.8553 150.211 26.566C149.465 26.2767 148.814 25.8503 148.258 25.2868C147.71 24.7157 147.283 24.019 146.979 23.1967C146.682 22.3744 146.533 21.4302 146.533 20.3642C146.533 18.948 146.785 17.7487 147.287 16.7665C147.79 15.7843 148.505 15.0381 149.434 14.5279C150.363 14.0178 151.471 13.7627 152.758 13.7627C153.953 13.7627 155.012 14.0178 155.933 14.5279C156.862 15.0381 157.589 15.7843 158.115 16.7665C158.648 17.7487 158.914 18.948 158.914 20.3642ZM150.085 20.3642C150.085 21.2018 150.177 21.9061 150.36 22.4772C150.542 23.0482 150.828 23.4784 151.216 23.7678C151.604 24.0571 152.111 24.2018 152.735 24.2018C153.352 24.2018 153.851 24.0571 154.231 23.7678C154.62 23.4784 154.901 23.0482 155.077 22.4772C155.259 21.9061 155.351 21.2018 155.351 20.3642C155.351 19.519 155.259 18.8185 155.077 18.2627C154.901 17.6992 154.62 17.2767 154.231 16.9949C153.843 16.7132 153.337 16.5723 152.712 16.5723C151.791 16.5723 151.121 16.8883 150.702 17.5203C150.291 18.1523 150.085 19.1003 150.085 20.3642Z"/><path d="M172.575 14.0025V26.7716H169.902L169.434 25.1383H169.251C168.977 25.5723 168.635 25.9264 168.223 26.2005C167.812 26.4746 167.359 26.6764 166.864 26.8058C166.369 26.9353 165.855 27 165.322 27C164.409 27 163.613 26.8401 162.935 26.5203C162.258 26.1929 161.728 25.6865 161.348 25.0013C160.975 24.316 160.788 23.4251 160.788 22.3287V14.0025H164.272V21.4607C164.272 22.3744 164.435 23.0635 164.763 23.5279C165.09 23.9924 165.612 24.2246 166.327 24.2246C167.036 24.2246 167.591 24.0647 167.995 23.7449C168.399 23.4175 168.68 22.9416 168.84 22.3173C169.008 21.6853 169.091 20.9162 169.091 20.0102V14.0025H172.575Z"/><path d="M179.337 27C177.913 27 176.752 26.4442 175.854 25.3325C174.963 24.2132 174.517 22.5723 174.517 20.4099C174.517 18.2246 174.971 16.5723 175.877 15.453C176.783 14.3261 177.967 13.7627 179.429 13.7627C180.038 13.7627 180.575 13.8464 181.039 14.014C181.503 14.1815 181.903 14.4061 182.238 14.6878C182.581 14.9695 182.87 15.2855 183.106 15.6358H183.221C183.175 15.3921 183.118 15.0343 183.049 14.5622C182.988 14.0825 182.958 13.5914 182.958 13.0888V9H186.453V26.7716H183.78L183.106 25.1155H182.958C182.737 25.4657 182.459 25.7855 182.124 26.0749C181.797 26.3566 181.405 26.5812 180.948 26.7487C180.491 26.9162 179.954 27 179.337 27ZM180.559 24.2246C181.511 24.2246 182.181 23.9429 182.569 23.3794C182.965 22.8084 183.175 21.9518 183.198 20.8096V20.4327C183.198 19.1916 183.007 18.2437 182.627 17.5888C182.246 16.9264 181.538 16.5952 180.502 16.5952C179.733 16.5952 179.132 16.9264 178.698 17.5888C178.264 18.2513 178.047 19.2069 178.047 20.4556C178.047 21.7043 178.264 22.6447 178.698 23.2767C179.139 23.9086 179.76 24.2246 180.559 24.2246Z"/></svg></a>
+        <p data-t="f_about"></p>
+        <a class="status" href="#" data-t="f_status"></a>
+      </div>
+      <div><h3 data-t="f_product"></h3><ul id="fl1"></ul></div>
+      <div><h3 data-t="f_dev"></h3><ul id="fl2"></ul></div>
+      <div><h3 data-t="f_company"></h3><ul id="fl3"></ul></div>
+      <div><h3 data-t="f_legal"></h3><ul id="fl4"></ul></div>
+    </div>
+    <div class="f-bottom">
+      <span>© 2026 NodeCloud</span>
+      <span id="rateNote"></span>
+      <button type="button" id="theme" data-t="theme"></button>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ===== catalogue: gnode.cloud, 1 October 2026, rubles per hour ===== */
+const GROUPS = [
+  { id: 'entry', ru: ['Начальный уровень', 'Инференс, рендер, первые проекты'], en: ['Entry level', 'Inference, rendering, first projects'] },
+  { id: 'mid', ru: ['Средний класс', 'Дообучение, генерация, профессиональный рендер'], en: ['Mid range', 'Fine-tuning, generation, pro rendering'] },
+  { id: 'pro', ru: ['Профессиональный AI', 'Обучение больших моделей, HPC'], en: ['Professional AI', 'Training large models, HPC'] },
+  { id: 'top', ru: ['Hopper и Blackwell', 'Крупные LLM и HPC'], en: ['Hopper and Blackwell', 'Large LLMs and HPC'] },
+];
+// [model, group, VRAM GB, RAM GB, vCPU, ₽/h, availability: low | none]
+const GPUS = [
+  ['NVIDIA L4', 'entry', 24, 50, 12, 135, 'low'],
+  ['NVIDIA A40', 'entry', 48, 50, 9, 135, 'low'],
+  ['RTX 3090', 'entry', 24, 125, 16, 138, 'low'],
+  ['RTX A6000', 'mid', 48, 50, 9, 146, 'low'],
+  ['RTX 4090', 'mid', 24, 41, 6, 204, 'none'],
+  ['NVIDIA L40', 'mid', 48, 94, 8, 226, 'none'],
+  ['RTX 6000 Ada', 'mid', 48, 167, 10, 232, 'low'],
+  ['RTX 5090', 'mid', 32, 93, 16, 273, 'low'],
+  ['NVIDIA L40S', 'mid', 48, 94, 16, 301, 'low'],
+  ['A100 PCIe', 'pro', 80, 117, 8, 439, 'low'],
+  ['A100 SXM', 'pro', 80, 250, 16, 439, 'low'],
+  ['RTX PRO 6000 Server', 'pro', 96, 188, 16, 577, 'low'],
+  ['RTX PRO 6000 WK', 'pro', 96, 188, 16, 604, 'low'],
+  ['AMD MI300X', 'pro', 192, 283, 24, 660, 'none'],
+  ['H100 PCIe', 'top', 80, 188, 16, 798, 'low'],
+  ['H100 NVL', 'top', 94, 251, 18, 880, 'low'],
+  ['H100 SXM', 'top', 80, 125, 20, 963, 'low'],
+  ['H200 NVL', 'top', 143, 251, 24, 1046, 'none'],
+  ['H200 SXM', 'top', 141, 251, 24, 1267, 'low'],
+  ['Blackwell B200', 'top', 180, 283, 28, 1874, 'none'],
+  ['Blackwell B300', 'top', 288, 251, 32, 2178, 'none'],
+];
+const STORAGE = [20, 50, 100, 200, 500]; // GB, +1 ₽/h for every 20 GB
+const PERIODS = [['day', 24], ['week', 168], ['month', 720]];
+
+/* ===== currency: rubles are the billing currency; others are shown at the
+   Bank of Russia rate. Live rate from cbr-xml-daily.ru, fallback snapshot. ===== */
+const RATES_FALLBACK = { date: '2026-10-01', rub: { USD: 83.5588, EUR: 94.881, KZT: 0.190179, BYN: 27.6621, UZS: 0.007076, KGS: 0.955518, AMD: 0.230297, GEL: 32.0751, AZN: 49.1522, CNY: 12.4732, TJS: 9.04806 } };
+let RATES = RATES_FALLBACK;
+const CURRENCIES = ['RUB', 'USD', 'EUR', 'KZT', 'BYN', 'UZS', 'KGS', 'AMD', 'GEL', 'AZN', 'TJS', 'CNY'];
+// where people pay in what: by time zone first (location), then by locale region
+const TZ_CUR = {
+  'Europe/Moscow': 'RUB', 'Europe/Kaliningrad': 'RUB', 'Europe/Samara': 'RUB', 'Europe/Volgograd': 'RUB', 'Europe/Kirov': 'RUB', 'Europe/Saratov': 'RUB', 'Europe/Ulyanovsk': 'RUB', 'Europe/Astrakhan': 'RUB',
+  'Asia/Yekaterinburg': 'RUB', 'Asia/Omsk': 'RUB', 'Asia/Novosibirsk': 'RUB', 'Asia/Barnaul': 'RUB', 'Asia/Tomsk': 'RUB', 'Asia/Novokuznetsk': 'RUB', 'Asia/Krasnoyarsk': 'RUB', 'Asia/Irkutsk': 'RUB', 'Asia/Chita': 'RUB', 'Asia/Yakutsk': 'RUB', 'Asia/Vladivostok': 'RUB', 'Asia/Magadan': 'RUB', 'Asia/Sakhalin': 'RUB', 'Asia/Kamchatka': 'RUB', 'Asia/Anadyr': 'RUB', 'Asia/Srednekolymsk': 'RUB', 'Asia/Khandyga': 'RUB', 'Asia/Ust-Nera': 'RUB',
+  'Asia/Almaty': 'KZT', 'Asia/Qostanay': 'KZT', 'Asia/Aqtobe': 'KZT', 'Asia/Aqtau': 'KZT', 'Asia/Atyrau': 'KZT', 'Asia/Oral': 'KZT', 'Asia/Qyzylorda': 'KZT',
+  'Europe/Minsk': 'BYN', 'Asia/Tashkent': 'UZS', 'Asia/Samarkand': 'UZS', 'Asia/Bishkek': 'KGS', 'Asia/Yerevan': 'AMD', 'Asia/Tbilisi': 'GEL', 'Asia/Baku': 'AZN', 'Asia/Dushanbe': 'TJS', 'Asia/Shanghai': 'CNY', 'Asia/Urumqi': 'CNY',
+};
+const REGION_CUR = { RU: 'RUB', KZ: 'KZT', BY: 'BYN', UZ: 'UZS', KG: 'KGS', AM: 'AMD', GE: 'GEL', AZ: 'AZN', TJ: 'TJS', CN: 'CNY', US: 'USD' };
+const EURO = ['AT', 'BE', 'HR', 'CY', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PT', 'SK', 'SI', 'ES'];
+
+function detectCurrency() {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (TZ_CUR[tz]) return TZ_CUR[tz];
+    if (/^Europe\//.test(tz) && !/London|Dublin|Lisbon|Istanbul|Kiev|Kyiv|Chisinau|Zurich|Oslo|Stockholm|Copenhagen|Warsaw|Prague|Budapest|Bucharest|Sofia|Belgrade/.test(tz)) return 'EUR';
+  } catch { /* old browsers */ }
+  for (const l of navigator.languages || [navigator.language]) {
+    const region = (l.split('-')[1] || '').toUpperCase();
+    if (REGION_CUR[region]) return REGION_CUR[region];
+    if (EURO.includes(region)) return 'EUR';
+  }
+  return 'USD';
+}
+
+// Russian for Russian speakers and for languages of the CIS where Russian is widely read
+const RU_LANGS = /^(ru|be|kk|ky|uz|tg|hy|az|tk)\b/i;
+function detectLang() {
+  for (const l of navigator.languages || [navigator.language]) {
+    if (RU_LANGS.test(l)) return 'ru';
+    if (/^en\b/i.test(l)) return 'en';
+  }
+  return 'en';
+}
+
+const store = {
+  get(k) { try { return localStorage.getItem('nc.' + k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem('nc.' + k, v); } catch { /* private mode */ } },
+};
+
+const state = {
+  lang: store.get('lang') || detectLang(),
+  cur: store.get('cur') || detectCurrency(),
+  group: 'all',
+  hideNone: false,
+  open: null,
+};
+if (!CURRENCIES.includes(state.cur)) state.cur = 'USD';
+
+/* ===== copy. Plain, specific, no hype. ===== */
+const T = {
+  ru: {
+    notice: (m, g, p) => [`В наличии <b>${m}</b> с ${g} ГБ памяти, от ${p} в час`, `<b>${m}</b> от ${p} в час`],
+    notice_link: 'Арендовать', notice_close: 'Скрыть',
+    nav_catalog: 'Каталог', nav_start: 'Как начать', nav_clusters: 'Кластеры', nav_dev: 'Разработчикам', nav_faq: 'Вопросы',
+    login: 'Войти', launch: 'Запустить GPU', sales: 'Отдел продаж', signup: 'Создать аккаунт',
+    h1: 'Видеокарта с PyTorch\nи SSH через пару минут',
+    hero_gpu: 'Видеокарта, цена за час', hero_total: 'К оплате', hero_go: (m) => `Запустить ${m}`, hero_notify: 'Узнать о поступлении',
+    hero_spec: (g) => `${g[2]} ГБ видеопамяти, ${g[3]} ГБ ОЗУ, ${g[4]} vCPU, диск 20 ГБ`,
+    hero_all: 'Все 21 модель в каталоге', hero_clusters: 'Кластеры из 8 GPU',
+    art_cap: (g) => `Видеокарта ${g[0]} в разрезе: данные из памяти и по PCIe идут к тензорным ядрам, вентилятор охлаждает радиатор.`,
+    hour: 'Час',
+    lead: 'Выбираете GPU в каталоге, пополняете баланс и получаете IP, SSH и ссылку на Jupyter. CUDA и PyTorch уже стоят, драйверы настраивать не нужно.',
+    pay: 'Баланс пополняется банковским переводом или криптой, зарубежная карта и VPN не нужны. Поддержка отвечает в Telegram на русском.',
+    per_hour: 'в час',
+    cat_h: 'Каталог GPU',
+    cat_p: '21 модель от NVIDIA L4 до Blackwell B300. Нажмите на заголовок столбца, чтобы отсортировать, или на строку, чтобы выбрать срок и диск.',
+    all: 'Все', hide_none: 'Скрыть то, чего нет в наличии',
+    col_model: 'Модель', col_vram: 'Видеопамять', col_ram: 'ОЗУ', col_cpu: 'vCPU', col_price: (u) => `Цена за ${u}`, col_avail: 'Наличие',
+    unit_label: 'Цена за', units: { hour: 'час', day: 'день', month: 'месяц' }, sort_by: (c) => `Сортировать: ${c}`,
+    tags: { 'RTX 3090': 'Популярная', 'RTX 4090': 'Хит продаж', 'NVIDIA L40S': 'Рекомендуем', 'RTX 5090': 'Новинка' },
+    specs_m: (g) => `${g[2]} ГБ, ${g[3]} ГБ ОЗУ, ${g[4]} vCPU`,
+    gb: 'ГБ', low: 'Осталось мало', none: 'Нет в наличии',
+    period: 'Срок аренды', day: 'День', week: 'Неделя', month: 'Месяц',
+    disk: 'Диск', total: 'К оплате за срок', rent: (m) => `Арендовать ${m}`, notify: 'Сообщить о поступлении',
+    total_note: 'Цена в час с диском, умноженная на срок',
+    empty: 'В этой группе сейчас нет свободных карт.',
+    cat_note_rub: (disk) => `Диск от 20 до 500 ГБ стоит ${disk} в час за каждые 20 ГБ. Деньги списываются с баланса при запуске.`,
+    cat_note_cur: (c, d, disk) => `Цены в ${c} пересчитаны по курсу на ${d}, сумма списания может немного отличаться. Диск от 20 до 500 ГБ стоит ${disk} в час за каждые 20 ГБ.`,
+    start_h: 'Как начать',
+    start_p: 'Если вы раньше не арендовали облачные видеокарты, весь путь занимает несколько минут.',
+    st1_h: 'Регистрация', st1_p: 'По почте или через Telegram. Это бесплатно.', st1_t: 'около минуты',
+    st2_t: 'несколько минут', st3_t: 'сразу', st4_t: 'около 2 минут',
+    p1_h: 'Вход в NodeCloud', p1_or: 'или', p2_transfer: 'Реквизиты пришлёт менеджер в Telegram', p2_crypto: 'Зачисляется автоматически',
+    p3_gpu: 'Видеокарта', p4_boot: 'Запускается', p4_ok: 'Работает',
+    scr: ['Вход', 'Баланс', 'Новый сервер', 'Мои серверы'],
+    copy_cmd: 'Копировать команду', copied: 'Скопировано',
+    m_mail: 'Почта', m_signin: 'Войти', m_tg: 'Через Telegram', m_balance: 'Баланс', m_transfer: 'Банковский перевод', m_crypto: 'Крипта',
+    m_period: 'Срок', m_ready: 'Сервер запущен',
+    st2_h: 'Баланс', st2_p: 'Банковский перевод или крипта. Для перевода менеджер в Telegram пришлёт реквизиты и подтвердит зачисление.',
+    st3_h: 'Видеокарта и срок', st3_p: 'Час, день, неделя или месяц. Сумму видно до запуска, она списывается с баланса.',
+    st4_h: 'Подключение', st4_p: 'Через пару минут приходят IP, SSH-доступ и ссылка на Jupyter.',
+    start_fine: 'Аренда считается с момента запуска и не ставится на паузу. Если остановить сервер раньше, оплаченное время не возвращается, поэтому срок лучше брать по задаче.',
+    ready_h: 'Что уже есть на сервере',
+    ready_p: 'Драйверы и библиотеки ставить не нужно.',
+    facts: [
+      ['Окружение', 'CUDA, cuDNN, PyTorch и Jupyter Lab в готовых образах.'],
+      ['Доступ', 'SSH по ключу или паролю. Публичный IP сразу после старта.'],
+      ['Данные', 'Постоянные тома и снапшоты хранятся отдельно от сервера и переживают его остановку.'],
+      ['API', 'REST API, чтобы запускать и останавливать серверы из скриптов и CI. Можно привязать свои SSH-ключи.'],
+      ['Цена', 'Фиксированная сумма за выбранный срок, без абонентской платы и доплат.'],
+      ['Поддержка', 'Telegram, на русском. Помогаем с запуском и образами.'],
+    ],
+    dev_h: 'Из терминала',
+    dev_p: 'Тот же сервер можно поднять одной командой или через REST API.',
+    dev_list: ['Образы с CUDA 12 и PyTorch', 'Jupyter Lab открывается по ссылке', 'Свои SSH-ключи в личном кабинете', 'Запуск и остановка из CI'],
+    cl_h: 'Кластеры из восьми Blackwell',
+    cl_p: 'Восемь B200 или B300, связанных через NVLink и InfiniBand. Для обучения больших языковых моделей, когда одной карты мало.',
+    cl_cta: 'Написать в отдел продаж',
+    spec: [['Состав', '8 × B200 или 8 × B300'], ['Связь между картами', 'NVLink, InfiniBand'], ['Минимальный срок', '3 месяца'], ['Конфигурация', 'Под задачу']],
+    b2b: 'Юрлицам даём закрывающие документы и отдельные условия при постоянной загрузке.',
+    faq_h: 'Вопросы',
+    faq_p: 'Если ответа нет, напишите в Telegram.',
+    faq: [
+      ['Как проходит оплата?', 'Баланс пополняется банковским переводом или криптой. Для перевода менеджер в Telegram присылает реквизиты и вручную подтверждает зачисление, в рабочее время это занимает несколько минут.'],
+      ['Что, если остановить аренду раньше срока?', 'Оплаченный период не пересчитывается и не возвращается. Вы платите вперёд за выбранный срок, поэтому его лучше выбирать по задаче.'],
+      ['Насколько безопасен доступ к серверу?', 'Вход по SSH-ключу или паролю, личный кабинет работает по TLS, пароли хранятся в виде хэшей. Каждый сервер изолирован от других клиентов.'],
+      ['Что будет с данными, когда аренда закончится?', 'Постоянные тома и снапшоты хранятся отдельно от сервера. Продлите аренду или сделайте снапшот заранее, чтобы ничего не потерять.'],
+    ],
+    last_h: 'Первый сервер можно запустить сегодня',
+    last_p: 'Регистрация занимает минуту. Пополните баланс и выберите видеокарту.',
+    f_about: 'Аренда GPU с оплатой переводом или криптой и поддержкой на русском.',
+    f_status: 'Все системы работают',
+    f_product: 'Продукт', f_dev: 'Разработчикам', f_company: 'Компания', f_legal: 'Документы',
+    fl1: ['Каталог GPU', 'Кластеры', 'Цены', 'Статус систем'],
+    fl2: ['Документация', 'API', 'SSH-ключи', 'CLI', 'Гайды'],
+    fl3: ['О нас', 'Блог', 'Карьера', 'Партнёрам', 'Контакты'],
+    fl4: ['Условия использования', 'Конфиденциальность', 'Безопасность', 'SLA', 'Обработка персональных данных'],
+    rate_live: (d) => `Курс на ${d}`,
+    theme: 'Сменить тему',
+    lang_label: 'Язык', cur_label: 'Валюта',
+  },
+  en: {
+    notice: (m, g, p) => [`<b>${m}</b> with ${g} GB of memory is in stock, from ${p} an hour`, `<b>${m}</b> from ${p} an hour`],
+    notice_link: 'Rent it', notice_close: 'Hide',
+    nav_catalog: 'Catalog', nav_start: 'Getting started', nav_clusters: 'Clusters', nav_dev: 'Developers', nav_faq: 'FAQ',
+    login: 'Log in', launch: 'Launch a GPU', sales: 'Talk to sales', signup: 'Create an account',
+    h1: 'A GPU with PyTorch\nand SSH in two minutes',
+    hero_gpu: 'GPU, price per hour', hero_total: 'Total', hero_go: (m) => `Launch ${m}`, hero_notify: 'Tell me when it is back',
+    hero_spec: (g) => `${g[2]} GB GPU memory, ${g[3]} GB RAM, ${g[4]} vCPU, 20 GB disk`,
+    hero_all: 'All 21 models in the catalog', hero_clusters: 'Clusters of 8 GPUs',
+    art_cap: (g) => `Cutaway of ${g[0]}: data from memory and over PCIe flows to the tensor cores while the fan cools the heatsink.`,
+    hour: 'Hour',
+    lead: 'Pick a GPU from the catalog, top up your balance and get an IP, SSH access and a Jupyter link. CUDA and PyTorch are already installed, so there are no drivers to set up.',
+    pay: 'Top up by bank transfer or crypto. Support answers in Telegram.',
+    per_hour: 'per hour',
+    cat_h: 'GPU catalog',
+    cat_p: '21 models from NVIDIA L4 to Blackwell B300. Click a column header to sort, or a row to choose the period and disk.',
+    all: 'All', hide_none: 'Hide what is out of stock',
+    col_model: 'Model', col_vram: 'GPU memory', col_ram: 'RAM', col_cpu: 'vCPU', col_price: (u) => `Price per ${u}`, col_avail: 'Availability',
+    unit_label: 'Price per', units: { hour: 'hour', day: 'day', month: 'month' }, sort_by: (c) => `Sort by ${c}`,
+    tags: { 'RTX 3090': 'Popular', 'RTX 4090': 'Best seller', 'NVIDIA L40S': 'Recommended', 'RTX 5090': 'New' },
+    specs_m: (g) => `${g[2]} GB, ${g[3]} GB RAM, ${g[4]} vCPU`,
+    gb: 'GB', low: 'Few left', none: 'Out of stock',
+    period: 'Rental period', day: 'Day', week: 'Week', month: 'Month',
+    disk: 'Disk', total: 'Total for the period', rent: (m) => `Rent ${m}`, notify: 'Tell me when it is back',
+    total_note: 'Hourly price with disk, times the period',
+    empty: 'Nothing in this group is free right now.',
+    cat_note_rub: (disk) => `A 20 to 500 GB disk costs ${disk} an hour per 20 GB. The amount is charged from your balance at launch.`,
+    cat_note_cur: (c, d, disk) => `${c} prices use the exchange rate for ${d}, so the charged amount may differ slightly. A 20 to 500 GB disk costs ${disk} an hour per 20 GB.`,
+    start_h: 'Getting started',
+    start_p: 'If you have never rented a cloud GPU before, the whole thing takes a few minutes.',
+    st1_h: 'Sign up', st1_p: 'With email or Telegram. It is free.', st1_t: 'about a minute',
+    st2_t: 'a few minutes', st3_t: 'instant', st4_t: 'about 2 minutes',
+    p1_h: 'Sign in to NodeCloud', p1_or: 'or', p2_transfer: 'A manager sends the details in Telegram', p2_crypto: 'Credited automatically',
+    p3_gpu: 'GPU', p4_boot: 'Starting', p4_ok: 'Running',
+    scr: ['Sign in', 'Balance', 'New server', 'My servers'],
+    copy_cmd: 'Copy command', copied: 'Copied',
+    m_mail: 'Email', m_signin: 'Sign in', m_tg: 'With Telegram', m_balance: 'Balance', m_transfer: 'Bank transfer', m_crypto: 'Crypto',
+    m_period: 'Period', m_ready: 'Server is running',
+    st2_h: 'Top up', st2_p: 'Bank transfer or crypto. For a transfer, a manager sends the payment details in Telegram and confirms the deposit.',
+    st3_h: 'GPU and period', st3_p: 'An hour, a day, a week or a month. You see the amount before launch, and it is charged from your balance.',
+    st4_h: 'Connect', st4_p: 'In a couple of minutes you get an IP, SSH access and a Jupyter link.',
+    start_fine: 'Billing starts at launch and cannot be paused. If you stop a server early, the paid time is not refunded, so pick a period that fits the job.',
+    ready_h: 'What is already on the server',
+    ready_p: 'No drivers or libraries to install.',
+    facts: [
+      ['Environment', 'CUDA, cuDNN, PyTorch and Jupyter Lab in ready-made images.'],
+      ['Access', 'SSH with a key or password. A public IP right after start.'],
+      ['Data', 'Persistent volumes and snapshots live apart from the server and survive when it stops.'],
+      ['API', 'A REST API to start and stop servers from scripts and CI. You can add your own SSH keys.'],
+      ['Price', 'A fixed amount for the period you choose. No subscription, no extra fees.'],
+      ['Support', 'Telegram, in Russian. We help with launch and images.'],
+    ],
+    dev_h: 'From the terminal',
+    dev_p: 'The same server starts with one command or through the REST API.',
+    dev_list: ['Images with CUDA 12 and PyTorch', 'Jupyter Lab opens from a link', 'Your own SSH keys in the dashboard', 'Start and stop from CI'],
+    cl_h: 'Clusters of eight Blackwell GPUs',
+    cl_p: 'Eight B200 or B300 GPUs linked with NVLink and InfiniBand, for training large language models when one card is not enough.',
+    cl_cta: 'Contact sales',
+    spec: [['Configuration', '8 × B200 or 8 × B300'], ['Interconnect', 'NVLink, InfiniBand'], ['Minimum term', '3 months'], ['Setup', 'Built for your workload']],
+    b2b: 'Companies get closing documents and custom terms for steady usage.',
+    faq_h: 'FAQ',
+    faq_p: 'If your question is not here, write to us in Telegram.',
+    faq: [
+      ['How does payment work?', 'You top up by bank transfer or crypto. For a transfer, a manager sends the payment details in Telegram and confirms the deposit by hand, which takes a few minutes during business hours.'],
+      ['What if I stop the rental early?', 'The paid period is not recalculated or refunded. You pay upfront for the period you choose, so pick one that fits the job.'],
+      ['How secure is access to the server?', 'Login is by SSH key or password, the dashboard runs over TLS and passwords are stored as hashes. Each server is isolated from other customers.'],
+      ['What happens to my data when the rental ends?', 'Persistent volumes and snapshots are stored apart from the server. Extend the rental or take a snapshot in advance so nothing is lost.'],
+    ],
+    last_h: 'You can launch your first server today',
+    last_p: 'Signing up takes a minute. Top up your balance and pick a GPU.',
+    f_about: 'GPU rental with payment by transfer or crypto and support in Russian.',
+    f_status: 'All systems operational',
+    f_product: 'Product', f_dev: 'Developers', f_company: 'Company', f_legal: 'Legal',
+    fl1: ['GPU catalog', 'Clusters', 'Pricing', 'System status'],
+    fl2: ['Documentation', 'API', 'SSH keys', 'CLI', 'Guides'],
+    fl3: ['About', 'Blog', 'Careers', 'Partners', 'Contact'],
+    fl4: ['Terms of use', 'Privacy', 'Security', 'SLA', 'Personal data processing'],
+    rate_live: (d) => `Exchange rate for ${d}`,
+    theme: 'Switch theme',
+    lang_label: 'Language', cur_label: 'Currency',
+  },
+};
+const t = (k) => T[state.lang][k];
+
+/* ===== money ===== */
+const CUR_SIGN = {
+  RUB: { ru: '₽', en: '₽' }, USD: { ru: '$', en: '$' }, EUR: { ru: '€', en: '€' }, CNY: { ru: '¥', en: '¥' },
+  KZT: { ru: '₸', en: '₸' }, BYN: { ru: 'Br', en: 'Br' }, UZS: { ru: 'сум', en: 'UZS' }, KGS: { ru: 'сом', en: 'KGS' },
+  AMD: { ru: '֏', en: '֏' }, GEL: { ru: '₾', en: '₾' }, AZN: { ru: '₼', en: '₼' }, TJS: { ru: 'смн', en: 'TJS' },
+};
+const CUR_BEFORE = ['USD', 'EUR', 'CNY'];
+function money(rub, opts = {}) {
+  const loc = state.lang === 'ru' ? 'ru-RU' : 'en-US';
+  const cur = state.cur;
+  const v = cur === 'RUB' ? rub : rub / RATES.rub[cur];
+  // kopecks and tiyn add noise; cents matter only on small amounts
+  const digits = cur === 'RUB' ? 0 : v < 10 ? 2 : v < 100 && !opts.whole ? 2 : 0;
+  const n = new Intl.NumberFormat(loc, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(v);
+  const sign = CUR_SIGN[cur][state.lang];
+  // Russian puts every sign after the number; English writes $, € and ¥ before it
+  return state.lang === 'en' && CUR_BEFORE.includes(cur) ? `${sign}${n}` : `${n}\u00A0${sign}`;
+}
+const dateText = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString(state.lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/* ===== render ===== */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function renderStatic() {
+  document.documentElement.lang = state.lang;
+  for (const el of document.querySelectorAll('[data-t]')) {
+    const v = t(el.dataset.t);
+    if (typeof v === 'string') el.textContent = v;
+  }
+  $('#lang').setAttribute('aria-label', t('lang_label'));
+  $('#cur').setAttribute('aria-label', t('cur_label'));
+  $('#facts').innerHTML = t('facts').map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+  $('#devList').innerHTML = t('dev_list').map((x) => `<li>${esc(x)}</li>`).join('');
+  $('#spec').innerHTML = t('spec').map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+  $('#faqList').innerHTML = t('faq').map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
+  for (const id of ['fl1', 'fl2', 'fl3', 'fl4']) $('#' + id).innerHTML = t(id).map((x) => `<li><a href="#">${esc(x)}</a></li>`).join('');
+  $('#groups').innerHTML = [['all', t('all')], ...GROUPS.map((g) => [g.id, g[state.lang][0]])]
+    .map(([id, label]) => `<button type="button" data-g="${id}" aria-pressed="${state.group === id}">${esc(label)}</button>`).join('');
+  $('#lang').innerHTML = [['ru', 'RU'], ['en', 'EN']].map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+  $('#lang').value = state.lang;
+  $('#cur').innerHTML = CURRENCIES.map((c) => `<option value="${c}">${c}</option>`).join('');
+  $('#cur').value = state.cur;
+  // the menu on phones carries its own copies of the two pickers
+  $('#lang2').innerHTML = [['ru', 'Русский'], ['en', 'English']].map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+  $('#lang2').value = state.lang;
+  $('#cur2').innerHTML = $('#cur').innerHTML;
+  $('#cur2').value = state.cur;
+}
+
+// quick launch in the hero: popular cards that people actually rent, all in stock
+const QUICK = ['RTX 3090', 'RTX 5090', 'NVIDIA L40S', 'A100 SXM', 'H100 SXM', 'H200 SXM'];
+const QUICK_PERIODS = [['hour', 1], ['day', 24], ['week', 168], ['month', 720]];
+state.qModel = 'H100 SXM';
+state.qHours = 24;
+
+/* ===== isometric GPU, "x-ray" technical illustration =====
+   Board, chips and power parts are solid; the shroud, heatsink and fans are drawn
+   as outlines only, so the card reads as a whole and the work inside stays visible.
+   Axonometric projection: card length along x (60), depth along y (22), height z. */
+const ISO = { u: 9, ax: 20 * Math.PI / 180, ay: 50 * Math.PI / 180 };
+const AX = [Math.cos(ISO.ax) * ISO.u, Math.sin(ISO.ax) * ISO.u];   // screen step for +1 in x
+const AY = [-Math.cos(ISO.ay) * ISO.u, Math.sin(ISO.ay) * ISO.u];  // screen step for +1 in y
+
+const P = (x, y, z) => [
+  (x * Math.cos(ISO.ax) - y * Math.cos(ISO.ay)) * ISO.u,
+  (x * Math.sin(ISO.ax) + y * Math.sin(ISO.ay) - z) * ISO.u,
+];
+const f1 = (v) => v.toFixed(1);
+const pts = (list) => list.map((p) => P(...p).map(f1).join(',')).join(' ');
+const poly = (list, cls, extra = '') => `<polygon class="${cls}" ${extra} points="${pts(list)}"/>`;
+const line = (a, b, cls) => { const [x1, y1] = P(...a), [x2, y2] = P(...b); return `<line class="${cls}" x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}"/>`; };
+const path = (list, cls) => `<path class="${cls}" d="M${list.map((p) => P(...p).map(f1).join(' ')).join(' L')}"/>`;
+// route a polyline with right angles only: each leg moves along x, then y, then z
+const orth = (list) => {
+  const out = [list[0]];
+  for (let i = 1; i < list.length; i++) {
+    const a = out[out.length - 1], b = list[i];
+    for (const q of [[b[0], a[1], a[2]], [b[0], b[1], a[2]], b]) {
+      const l = out[out.length - 1];
+      if (q[0] !== l[0] || q[1] !== l[1] || q[2] !== l[2]) out.push(q);
+    }
+  }
+  return out;
+};
+const circle3 = (cx, cy, z, r, n = 40) => Array.from({ length: n + 1 }, (_, i) => { const a = (i / n) * Math.PI * 2; return [cx + r * Math.cos(a), cy + r * Math.sin(a), z]; });
+// solid box: front-left (y = y1), front-right (x = x1) and top faces
+function box(x, y, z, w, d, h, tone = '') {
+  const x1 = x + w, y1 = y + d, z1 = z + h;
+  return poly([[x, y1, z], [x1, y1, z], [x1, y1, z1], [x, y1, z1]], `f-l ln ${tone}`)
+    + poly([[x1, y, z], [x1, y1, z], [x1, y1, z1], [x1, y, z1]], `f-r ln ${tone}`)
+    + poly([[x, y, z1], [x1, y, z1], [x1, y1, z1], [x, y1, z1]], `f-top ln ${tone}`);
+}
+// capacitor: side silhouette and a lid
+function cyl(cx, cy, z, r, h) {
+  const bot = circle3(cx, cy, z, r, 24), top = circle3(cx, cy, z + h, r, 24);
+  const sx = (p) => P(...p)[0];
+  const lo = bot.reduce((a, p) => (sx(p) < sx(a) ? p : a)), hi = bot.reduce((a, p) => (sx(p) > sx(a) ? p : a));
+  return poly(bot, 'f-r ln') + poly([lo, hi, [hi[0], hi[1], z + h], [lo[0], lo[1], z + h]], 'f-r') + poly(top, 'f-top ln');
+}
+// compact card: the die sits in the middle, the two fans almost touch
+const CARD = { w: 44, d: 22 };
+const DIE = { x: 16.5, y: 6.5, w: 11, d: 9, z: 1.75, cols: 8, rows: 6 };
+const FANS = [{ cx: 11.4, cy: 11, r: 8 }, { cx: 31.4, cy: 11, r: 8 }];
+const SHROUD_Z = 7.8;
+const FOG = { near: 3, far: 26, depth: 1.8 }; // scene units
+const MEM = [[12.2, 7], [12.2, 12.4], [28.6, 7], [28.6, 12.4], [17.5, 2.8], [22.5, 2.8], [17.5, 16.6], [22.5, 16.6]];
+let artBuilt = false;
+let FX = []; // svg of moving parts, drawn into #artFx
+const HUB_MARK = 'M36 6C36 2.68629 38.6863 0 42 0C45.3137 0 48 2.68629 48 6C48 9.31371 50.6863 12 54 12C57.3137 12 60 14.6863 60 18C60 21.3137 57.3137 24 54 24C50.6863 24 48 26.6863 48 30C48 33.3137 45.3137 36 42 36C38.6863 36 36 33.3137 36 30C36 26.6863 33.3137 24 30 24C26.6863 24 24 21.3137 24 18C24 14.6863 21.3137 12 18 12C14.6863 12 12 14.6863 12 18C12 21.3137 14.6863 24 18 24C21.3137 24 24 26.6863 24 30C24 33.3137 21.3137 36 18 36C14.6863 36 12 33.3137 12 30C12 26.6863 9.31371 24 6 24C2.68629 24 0 21.3137 0 18C0 14.6863 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 14.6863 0 18 0C21.3137 0 24 2.68629 24 6C24 9.31371 26.6863 12 30 12C33.3137 12 36 14.6863 36 18C36 21.3137 38.6863 24 42 24C45.3137 24 48 21.3137 48 18C48 14.6863 45.3137 12 42 12C38.6863 12 36 9.31371 36 6Z';
+const ART_BOX = {};
+function fitArt() {
+  const b = ART_BOX.narrow;
+  if (b) for (const id of ['#artSvg', '#artFx']) $(id).setAttribute('viewBox', b.map((v) => v.toFixed(0)).join(' '));
+}
+
+// Surroundings: a server around the card. Each piece gets an opacity from its distance
+// to the card in scene space (see FOG), so the scene dissolves without a gradient fill.
+function buildEnv() {
+  const E = [];
+  // Fog in scene space: distance across the floor from the card's footprint, with
+  // depth weighted harder than width and height counted a little, so the edge of the
+  // scene dissolves along the isometric planes instead of a screen circle.
+  const fade = ([x, y, z]) => {
+    const dx = Math.max(0, -x, x - (CARD.w + 1));
+    const dy = Math.max(0, -y, y - CARD.d) * FOG.depth;
+    const dz = Math.max(0, z - 10) * 0.6;
+    const d = Math.hypot(dx, dy, dz);
+    if (d >= FOG.far) return 0;
+    if (d <= FOG.near) return 1;
+    const k = (d - FOG.near) / (FOG.far - FOG.near);
+    return Math.round((1 - k * k * (3 - 2 * k)) * 20) / 20;
+  };
+  const putFx = (svg, at, max = 1) => { const o = fade(at) * max; if (o > 0.02) FX.push(`<g opacity="${o.toFixed(2)}">${svg}</g>`); };
+  const put = (svg, at, max = 1) => { const o = fade(at) * max; if (o > 0.02) E.push(`<g opacity="${o.toFixed(2)}">${svg}</g>`); };
+  const putLine = (list, cls, max = 1, step = 2) => {
+    for (let i = 0; i < list.length - 1; i++) {
+      const [a, b] = [list[i], list[i + 1]];
+      const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / step));
+      for (let k = 0; k < n; k++) {
+        const p0 = a.map((v, j) => v + (b[j] - v) * (k / n)), p1 = a.map((v, j) => v + (b[j] - v) * ((k + 1) / n));
+        put(path([p0, p1], cls), p0.map((v, j) => (v + p1[j]) / 2), max);
+      }
+    }
+  };
+  const Z = -2.2; // floor of the server
+  // floor grid, cut into short pieces so each fades on its own
+  for (let x = -50; x <= 95; x += 5) for (let y = -45; y < 70; y += 3) put(line([x, y, Z], [x, y + 3, Z], 'env-f'), [x, y + 1.5, Z], 0.9);
+  for (let y = -45; y <= 70; y += 5) for (let x = -50; x < 95; x += 3) put(line([x, y, Z], [x + 3, y, Z], 'env-f'), [x + 1.5, y, Z], 0.9);
+  // outlines built from short pieces, so big things fade smoothly too
+  const outline = (x, y, z, w, d, h, cls = 'env', max = 1) => {
+    const x1 = x + w, y1 = y + d, z1 = z + h;
+    const E4 = [
+      [[x, y, z1], [x1, y, z1]], [[x1, y, z1], [x1, y1, z1]], [[x1, y1, z1], [x, y1, z1]], [[x, y1, z1], [x, y, z1]],
+      [[x, y1, z], [x1, y1, z]], [[x1, y, z], [x1, y1, z]], [[x, y1, z], [x, y1, z1]], [[x1, y1, z], [x1, y1, z1]], [[x1, y, z], [x1, y, z1]],
+    ];
+    for (const [a, b] of E4) putLine([a, b], cls, max, 1.5);
+  };
+  const ringXY = (cx, cy, z, r, n = 36) => circle3(cx, cy, z, r, n);
+  const ringXZ = (cx, y, cz, r, n = 36) => Array.from({ length: n + 1 }, (_, i) => { const a = (i / n) * Math.PI * 2; return [cx + r * Math.cos(a), y, cz + r * Math.sin(a)]; });
+
+  // ---- behind: the next slot with another card, a network card, the chassis wall
+  put(box(11, -8.5, Z, 22, 1.8, 1.4), [22, -7.6, Z], 0.9);
+  const by = -32;
+  outline(0, by, Z + 1.4, 44, 22, 0.8);
+  outline(-0.4, by - 0.4, Z + 2.2, 44.4, 22.8, 6.2, 'env', 0.9);
+  for (const fx of [11.4, 31.4]) { putLine(ringXY(fx, by + 11, Z + 8.4, 8), 'env', 0.9, 1.5); putLine(ringXY(fx, by + 11, Z + 8.4, 1.7, 16), 'env', 0.9, 1); }
+  outline(44, by - 0.6, Z, 0.6, 23.2, 11.8);
+  // network card with two cages on its bracket
+  outline(-6, -20, Z + 1.4, 16, 8, 0.6);
+  for (let i = 0; i < 2; i++) outline(10, -19 + i * 3.6, Z + 1.6, 1.4, 2.8, 2.2);
+  putLine([[10, -18, Z + 2.5], [14, -18, Z + 2.5], [14, -18, Z], [14, -14, Z], [40, -14, Z]], 'cable', 0.8);
+  // chassis back wall
+  for (let x = -40; x <= 90; x += 6) putLine([[x, -44, Z], [x, -44, Z + 14]], 'env-f', 0.9, 2);
+  putLine([[-40, -44, Z + 14], [90, -44, Z + 14]], 'env', 0.9, 2);
+
+  // ---- in front: M.2 drives on the board, a wall of chassis fans, drive bays
+  for (let i = 0; i < 2; i++) {
+    outline(4 + i * 12, 28, Z, 10, 2.4, 0.4);
+    for (let k = 0; k < 3; k++) outline(5 + i * 12 + k * 3, 28.4, Z + 0.4, 2.2, 1.6, 0.4, 'env', 0.9);
+  }
+  for (let i = 0; i < 4; i++) {
+    const cx = -16 + i * 16;
+    outline(cx - 7, 36, Z, 14, 3, 14, 'env', 0.9);
+    putLine(ringXZ(cx, 36, Z + 7, 6), 'env', 0.9, 1.2);
+    putLine(ringXZ(cx, 36, Z + 7, 1.4, 14), 'env', 0.9, 0.8);
+    for (let k = 0; k < 5; k++) { const a = (k / 5) * Math.PI * 2; putLine([[cx + 1.6 * Math.cos(a), 36, Z + 7 + 1.6 * Math.sin(a)], [cx + 5.6 * Math.cos(a + 0.7), 36, Z + 7 + 5.6 * Math.sin(a + 0.7)]], 'env-f', 0.9, 1.2); }
+  }
+  for (let i = 0; i < 8; i++) outline(-24 + i * 9, 46, Z, 7.6, 8, 3.2, 'env', 0.8);
+  const lane3 = orth([[-20, 46, Z + 0.1], [-20, 33, Z + 0.1], [-24, 22, Z + 0.1]]);
+  put(path(lane3, 'trace'), [-21, 34, Z], 0.8);
+  putFx(path(lane3, 'flow slow'), [-21, 34, Z], 0.8);
+  // CPU with a tall heatsink, memory modules beside it
+  put(box(-34, 2, Z, 18, 18, 1.2), [-25, 11, Z]);
+  put(box(-31, 5, Z + 1.2, 12, 12, 7), [-25, 11, 3]);
+  for (let i = 0; i < 11; i++) put(line([-31 + i * 1.2, 17, Z + 1.6], [-31 + i * 1.2, 17, Z + 7.8], 'env'), [-25, 17, 2]);
+  for (let i = 0; i < 6; i++) put(box(-12 + i * 1.6, 0, Z, 0.7, 22, 4.2), [-10 + i * 1.6, 11, 0]);
+  // PCIe slot under the card's contacts, and a lane from the CPU to it
+  put(box(11, 21.6, Z, 22, 1.8, 1.4), [22, 22.5, Z]);
+  const lane = orth([[-16, 18, Z + 0.1], [-4, 26, Z + 0.1], [12, 26, Z + 0.1], [12, 23.4, Z + 0.1]]);
+  put(path(lane, 'trace'), [0, 24, Z]);
+  putFx(path(lane, 'flow'), [0, 24, Z]);
+  const lane2 = orth([[-16, 4, Z + 0.1], [-4, -4, Z + 0.1], [16, -4, Z + 0.1], [16, -6.7, Z + 0.1]]);
+  put(path(lane2, 'trace'), [5, -6, Z], 0.8);
+  putFx(path(lane2, 'flow slow'), [5, -6, Z], 0.8);
+  // cables leaving the card's bracket, fading piece by piece
+  putLine([[45, 4, 4], [54, 4, 4], [54, 4, Z], [54, 16, Z], [80, 16, Z]], 'cable');
+  putLine([[45, 9, 4], [50.5, 9, 4], [50.5, 9, Z], [50.5, 26, Z], [78, 26, Z]], 'cable');
+  putLine([[38, 0.6, 2.6], [38, -4, 2.6], [38, -4, Z], [38, -18, Z], [66, -18, Z]], 'cable');
+  return E.join('');
+}
+
+function buildArt() {
+  const items = []; // [depth key, svg]; drawn far to near
+  const add = (key, svg) => items.push([key, svg]);
+  const W = [buildEnv()];
+  // board and edge parts
+  W.push(box(0, 0, 0, CARD.w, CARD.d, 0.8));
+  for (let i = 0; i < 18; i++) { const x = 12 + i * 1.1; W.push(poly([[x, 22, 0.08], [x + 0.65, 22, 0.08], [x + 0.65, 22, 0.7], [x, 22, 0.7]], 'f-brand')); }
+  // traces and data in motion, flat on the board
+  const T = [];
+  // PCIe lanes fan in to the die; outer lanes turn higher so no two lanes cross
+  for (let i = 0; i < 6; i++) {
+    const x0 = 12.5 + i * 3.4, x1 = 17.6 + i * 1.8, y = 16.5 + (i < 3 ? i : 5 - i) * 0.9;
+    T.push([[x0, 22, 0.8], [x0, y, 0.8], [x1, y, 0.8], [x1, 15.5, 0.8]]);
+  }
+  for (const [mx, my] of MEM) { const cx = mx + 1.5, cy = my + 1.3; T.push([[cx, cy, 0.8], [Math.min(Math.max(cx, DIE.x + 1), DIE.x + DIE.w - 1), Math.min(Math.max(cy, DIE.y + 1), DIE.y + DIE.d - 1), 0.8]]); }
+  // power from the capacitor banks: out, a step to the die's row, in
+  for (let i = 0; i < 3; i++) {
+    const y0 = 7.2 + i * 3.8, y1 = 8.5 + i * 2.5;
+    T.push([[9.5, y0, 0.8], [14.2, y0, 0.8], [14.2, y1, 0.8], [DIE.x, y1, 0.8]]);
+    T.push([[33.5, y0, 0.8], [29.8, y0, 0.8], [29.8, y1, 0.8], [DIE.x + DIE.w, y1, 0.8]]);
+  }
+  for (let i = 0; i < T.length; i++) T[i] = orth(T[i]);
+  for (const t of T) W.push(path(t, 'trace'));
+  T.forEach((t, i) => FX.push(path(t, `flow${i % 3 === 1 ? ' slow' : ''}`)));
+  // power stage on both ends: chokes along the edges, capacitors between them
+  for (let i = 0; i < 4; i++) { add(1.4 + i * 2.7 + 2, box(1.4 + i * 2.7, 1.8, 0.8, 2.1, 2.1, 1.7)); add(1.4 + i * 2.7 + 18, box(1.4 + i * 2.7, 17.9, 0.8, 2.1, 2.1, 1.7)); }
+  for (let i = 0; i < 3; i++) add(34.2 + i * 2.9 + 18, box(34.2 + i * 2.9, 17.9, 0.8, 2.1, 2.1, 1.7));
+  for (let r = 0; r < 3; r++) for (const cx of [3.4, 7.2, 35.4, 39.4]) { const cy = 7.2 + r * 3.8; add(cx + cy, cyl(cx, cy, 0.8, 0.9, 1.6)); }
+  // power connector on the back edge
+  add(35 + 1, box(34.6, 0.6, 0.8, 7, 2.4, 1.8));
+  // memory chips with an activity lamp each
+  MEM.forEach(([mx, my], i) => add(mx + my + 1, box(mx, my, 0.8, 3, 2.6, 0.55) + poly([[mx + 1.1, my + 0.9, 1.36], [mx + 1.9, my + 0.9, 1.36], [mx + 1.9, my + 1.7, 1.36], [mx + 1.1, my + 1.7, 1.36]], 'lamp')));
+  for (const [mx, my] of MEM) FX.push(poly([[mx + 1.1, my + 0.9, 1.36], [mx + 1.9, my + 0.9, 1.36], [mx + 1.9, my + 1.7, 1.36], [mx + 1.1, my + 1.7, 1.36]], 'lamp-fx', 'data-lamp'));
+  // GPU package: substrate, die and tensor-core grid
+  let die = box(DIE.x - 0.7, DIE.y - 0.7, 0.8, DIE.w + 1.4, DIE.d + 1.4, 0.4) + box(DIE.x, DIE.y, 1.2, DIE.w, DIE.d, 0.55);
+  const cw = DIE.w / DIE.cols, cd = DIE.d / DIE.rows;
+  for (let r = 0; r < DIE.rows; r++) for (let c = 0; c < DIE.cols; c++) {
+    const x = DIE.x + c * cw + 0.2, y = DIE.y + r * cd + 0.2;
+    const q = [[x, y, DIE.z], [x + cw - 0.4, y, DIE.z], [x + cw - 0.4, y + cd - 0.4, DIE.z], [x, y + cd - 0.4, DIE.z]];
+    die += poly(q, 'cell');
+    FX.push(poly(q, 'cell-fx', `data-cell="${r},${c}"`));
+  }
+  add(DIE.x + DIE.y + 0.5, die);
+  items.sort((a, b) => a[0] - b[0]).forEach(([, svg]) => W.push(svg));
+  // I/O bracket with display outputs
+  const BX = CARD.w;
+  W.push(box(BX, -0.6, -1.4, 0.6, 23.2, 11.8));
+  for (let i = 0; i < 4; i++) { const y0 = 1.6 + i * 5; W.push(poly([[BX + 0.6, y0, 2.2], [BX + 0.6, y0 + 3.4, 2.2], [BX + 0.6, y0 + 3.4, 3.8], [BX + 0.6, y0, 3.8]], 'f-bg ln')); }
+  for (let i = 0; i < 9; i++) { const y0 = 1.5 + i * 2.3; W.push(line([BX + 0.6, y0, 6], [BX + 0.6, y0 + 1.4, 6], 'wire')); W.push(line([BX + 0.6, y0, 7.4], [BX + 0.6, y0 + 1.4, 7.4], 'wire')); }
+  // x-ray layer: fin edges, shroud outline, fan rings
+  const S = { x0: -0.4, y0: -0.4, x1: CARD.w, y1: CARD.d + 0.4, z0: 0.8, z1: SHROUD_Z };
+  for (let x = 0.6; x < CARD.w - 0.2; x += 0.9) W.push(line([x, S.y1, S.z0 + 0.6], [x, S.y1, S.z1 - 0.6], 'wire-f'));
+  for (let y = 0.4; y < CARD.d; y += 0.9) W.push(line([S.x1, y, S.z0 + 0.6], [S.x1, y, S.z1 - 0.6], 'wire-f'));
+  const E = [
+    [[S.x0, S.y0, S.z1], [S.x1, S.y0, S.z1]], [[S.x1, S.y0, S.z1], [S.x1, S.y1, S.z1]], [[S.x1, S.y1, S.z1], [S.x0, S.y1, S.z1]], [[S.x0, S.y1, S.z1], [S.x0, S.y0, S.z1]],
+    [[S.x0, S.y1, S.z0], [S.x1, S.y1, S.z0]], [[S.x1, S.y0, S.z0], [S.x1, S.y1, S.z0]],
+    [[S.x0, S.y1, S.z0], [S.x0, S.y1, S.z1]], [[S.x1, S.y1, S.z0], [S.x1, S.y1, S.z1]], [[S.x1, S.y0, S.z0], [S.x1, S.y0, S.z1]],
+  ];
+  for (const [a, b] of E) W.push(line(a, b, 'wire'));
+  for (const F of FANS) {
+    W.push(`<polygon class="wire" points="${pts(circle3(F.cx, F.cy, SHROUD_Z, F.r + 0.5, 64))}"/>`);
+    W.push(`<polygon class="wire" points="${pts(circle3(F.cx, F.cy, SHROUD_Z, F.r, 64))}"/>`);
+  }
+  // blades drawn once at angle 0; spinning = rotation in the fan's plane, which is an
+  // affine map on screen (A R A^-1), so each frame only updates one attribute per fan
+  FANS.forEach((F, fi) => {
+    // a disk under the impeller so board parts don't show through as stray lines
+    FX.push(`<polygon class="fan-disk" points="${pts(circle3(F.cx, F.cy, SHROUD_Z, F.r - 0.25, 64))}"/>`);
+    const B = [];
+    const r1 = 2.5, r2 = F.r - 0.75, sweep = 0.95, root = 0.62, tip = 0.34, N = 14;
+    const at = (r, a) => [F.cx + r * Math.cos(a), F.cy + r * Math.sin(a), SHROUD_Z];
+    for (let k = 0; k < 7; k++) {
+      const a0 = (k / 7) * Math.PI * 2;
+      const q = [];
+      // leading edge, curving with the spin
+      for (let i = 0; i <= N; i++) { const u = i / N; q.push(at(r1 + (r2 - r1) * u, a0 + sweep * u ** 1.4)); }
+      // rounded tip along the rim
+      for (let i = 1; i <= 5; i++) q.push(at(r2 + 0.25 * Math.sin((i / 6) * Math.PI), a0 + sweep + tip * (i / 6)));
+      // trailing edge back to the hub, wider at the root
+      for (let i = N; i >= 0; i--) { const u = i / N; q.push(at(r1 + (r2 - r1) * u, a0 + root + (sweep + tip - root) * u ** 1.4)); }
+      B.push(`<polygon class="blade" points="${pts(q)}"/>`);
+    }
+    // hub: brand yellow with the NodeCloud mark in black, spinning with the blades
+    const k = 0.068; // mark is 60 x 36 units; this fits it inside the hub
+    const [hx, hy] = P(F.cx, F.cy, SHROUD_Z);
+    const m = [AX[0] * k, AX[1] * k, AY[0] * k, AY[1] * k];
+    const e = hx - (m[0] * 30 + m[2] * 18), f = hy - (m[1] * 30 + m[3] * 18);
+    B.push(`<polygon class="f-brand ln" points="${pts(circle3(F.cx, F.cy, SHROUD_Z, 2.8, 40))}"/>`);
+    B.push(`<path class="hub-mark" transform="matrix(${m.map((v) => v.toFixed(4)).join(' ')} ${e.toFixed(2)} ${f.toFixed(2)})" d="${HUB_MARK}"/>`);
+    FX.push(`<g id="fan${fi}">${B.join('')}</g>`);
+  });
+
+  // frame the card itself; the fogged surroundings spill past the frame (overflow visible)
+  const pts8 = [];
+  for (const x of [-1, CARD.w + 1.2]) for (const y of [-1, CARD.d + 1]) for (const z of [-2.2, 10.4]) pts8.push(P(x, y, z));
+  const x0 = Math.min(...pts8.map((q) => q[0])), x1 = Math.max(...pts8.map((q) => q[0]));
+  const y0 = Math.min(...pts8.map((q) => q[1])), y1 = Math.max(...pts8.map((q) => q[1]));
+  const m = 24;
+  ART_BOX.narrow = [x0 - m, y0 - m, x1 - x0 + m * 2, y1 - y0 + m * 2];
+  $('#artSvg').innerHTML = W.join('');
+  $('#artFx').innerHTML = FX.join('');
+  fitArt();
+  artBuilt = true;
+}
+
+function labelArt(g) {
+  $('#artCap').textContent = t('art_cap')(g);
+}
+
+// motion: fans spin, a wave of work runs across the tensor cores, memory lamps blink
+let artVisible = true;
+let fanAngle = 0;
+let lastT = 0, lastCells = 0;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DET = AX[0] * AY[1] - AY[0] * AX[1];
+let fanEls = null, cellEls = null, lampEls = null;
+function drawBlades() {
+  if (!fanEls) fanEls = FANS.map((_, i) => document.getElementById(`fan${i}`));
+  const c = Math.cos(fanAngle), sn = Math.sin(fanAngle);
+  // M = A R A^-1
+  const ia = [AY[1] / DET, -AY[0] / DET, -AX[1] / DET, AX[0] / DET]; // A^-1 rows: [ia0 ia1; ia2 ia3]
+  const r0 = [AX[0] * c + AY[0] * sn, AX[1] * c + AY[1] * sn];        // A R e1
+  const r1 = [-AX[0] * sn + AY[0] * c, -AX[1] * sn + AY[1] * c];      // A R e2
+  const m = [r0[0] * ia[0] + r1[0] * ia[2], r0[1] * ia[0] + r1[1] * ia[2], r0[0] * ia[1] + r1[0] * ia[3], r0[1] * ia[1] + r1[1] * ia[3]];
+  FANS.forEach((F, i) => {
+    const [px, py] = P(F.cx, F.cy, SHROUD_Z);
+    const e = px - (m[0] * px + m[2] * py), f = py - (m[1] * px + m[3] * py);
+    fanEls[i].setAttribute('transform', `matrix(${m.map((v) => v.toFixed(4)).join(' ')} ${e.toFixed(2)} ${f.toFixed(2)})`);
+  });
+}
+function lightCells(now = 0) {
+  if (!cellEls) {
+    cellEls = [...document.querySelectorAll('#artFx [data-cell]')].map((el) => [el, ...el.dataset.cell.split(',').map(Number)]);
+    lampEls = [...document.querySelectorAll('#artFx [data-lamp]')];
+  }
+  const ph = now / 320;
+  for (const [el, r, k] of cellEls) el.classList.toggle('on', Math.sin(ph - (r + k) * 0.75) > 0.62);
+  for (const l of lampEls) l.classList.toggle('on', Math.random() < 0.4);
+}
+// 30 fps is plenty for fans and moving dashes and halves the repaint work
+let lastFrame = 0;
+function artTick(now) {
+  if (artVisible && !reduceMotion && now - lastFrame >= 32) {
+    const dt = lastT ? Math.min(0.1, (now - lastT) / 1000) : 0;
+    lastT = now;
+    lastFrame = now;
+    fanAngle += dt * 5;
+    drawBlades();
+    const fx = $('#artFx').style;
+    fx.setProperty('--dash', (-(now / 1400) * 16 % 16).toFixed(2));
+    fx.setProperty('--dash-slow', (-(now / 2200) * 16 % 16).toFixed(2));
+    if (now - lastCells > 120) { lightCells(now); lastCells = now; }
+  }
+  if (!artVisible) lastT = 0;
+  requestAnimationFrame(artTick);
+}
+new IntersectionObserver((e) => { artVisible = e[0].isIntersecting; }).observe($('#art'));
+
+function renderHero() {
+  if (!artBuilt) {
+    buildArt();
+    drawBlades();
+    lightCells();
+    if (!reduceMotion) requestAnimationFrame(artTick);
+  }
+  labelArt(GPUS.find((x) => x[0] === state.qModel));
+  $('#qModels').innerHTML = QUICK.map((m) => {
+    const g = GPUS.find((x) => x[0] === m);
+    return `<button type="button" role="radio" aria-checked="${m === state.qModel}" data-q="${esc(m)}"><b>${esc(m)}</b><span>${esc(money(g[5]))}</span></button>`;
+  }).join('');
+  $('#qPeriod').innerHTML = QUICK_PERIODS.map(([k, h]) => `<button type="button" role="radio" aria-pressed="${h === state.qHours}" aria-checked="${h === state.qHours}" data-h="${h}">${esc(t(k))}</button>`).join('');
+  const g = GPUS.find((x) => x[0] === state.qModel);
+  $('#qTotal').textContent = money((g[5] + 1) * state.qHours, { whole: true });
+  $('#qSpec').innerHTML = `${esc(t('hero_spec')(g))}. <span class="${g[6]}">${esc(t(g[6]))}</span>`;
+  $('#qGo').textContent = g[6] === 'none' ? t('hero_notify') : t('hero_go')(g[0]);
+}
+
+$('#qModels').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-q]');
+  if (!b) return;
+  state.qModel = b.dataset.q;
+  renderHero();
+  renderSteps();
+});
+$('#qPeriod').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-h]');
+  if (!b) return;
+  state.qHours = +b.dataset.h;
+  renderHero();
+  renderSteps();
+});
+// the real site sends this to the launch dialog; here it opens the model in the catalog
+$('#quick').addEventListener('submit', (e) => {
+  e.preventDefault();
+  state.open = state.qModel;
+  cfgChoice.hours = state.qHours >= 24 ? state.qHours : 24;
+  state.group = 'all';
+  renderStatic();
+  renderPrices();
+  const row = document.querySelector(`.row-btn[data-m="${CSS.escape(state.qModel)}"]`);
+  row?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+});
+
+// ---- announcement bar: points at a catalogue model, so price and stock stay true.
+// Hidden when the model runs out or after the visitor closes it (per announcement id).
+const NOTICE = { id: 'rtx-pro-6000-server-2026-10', model: 'RTX PRO 6000 Server' };
+function renderNotice() {
+  const bar = $('#noticeBar');
+  const g = GPUS.find((x) => x[0] === NOTICE.model);
+  if (!g || g[6] === 'none' || store.get('notice') === NOTICE.id) { bar.hidden = true; return; }
+  const [full, short] = t('notice')(esc(g[0]), g[2], esc(money(g[5])));
+  $('#notice').innerHTML = `<span class="full">${full}</span><span class="short">${short}</span>`;
+  $('#noticeX').setAttribute('aria-label', t('notice_close'));
+  bar.hidden = false;
+}
+$('#noticeX').addEventListener('click', () => { store.set('notice', NOTICE.id); renderNotice(); });
+// straight to the model, configurator open
+$('#noticeGo').addEventListener('click', (e) => {
+  e.preventDefault();
+  state.group = 'all';
+  state.sort = null;
+  state.open = NOTICE.model;
+  renderStatic();
+  renderPrices();
+  const row = document.querySelector(`.row-btn[data-m="${CSS.escape(NOTICE.model)}"]`);
+  row?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+});
+
+// ---- getting started: one step at a time, its screen on the right
+let stepOn = 0, stepTimer = null, stepHold = 0, typeTimer = null, bootTimer = null;
+const WALK_MS = 4500;
+function renderSteps() {
+  const g = GPUS.find((x) => x[0] === state.qModel);
+  $('#mModel').textContent = g[0];
+  $('#mMem').textContent = `${g[2]} ${t('gb')}`;
+  $('#mHour').textContent = `${money(g[5])} / ${t('hour').toLowerCase()}`;
+  $('#mSeg').innerHTML = QUICK_PERIODS.map(([k, h]) => `<span class="${h === state.qHours ? 'on' : ''}">${esc(t(k))}</span>`).join('');
+  $('#mTotal').textContent = money((g[5] + 1) * state.qHours, { whole: true });
+  $('#mGo').textContent = t('hero_go')(g[0]);
+  $('#mSrv').textContent = g[0];
+  $('#mBalance').textContent = money(Math.ceil(((g[5] + 1) * state.qHours) / 5000) * 5000, { whole: true });
+  setStep(stepOn, true);
+}
+function setStep(i, quiet = false) {
+  const changed = i !== stepOn || !quiet;
+  stepOn = i;
+  document.querySelectorAll('#walkList li').forEach((li, k) => {
+    li.classList.toggle('on', k === i);
+    // restart the progress bar
+    const bar = li.querySelector('.wbar'); bar.style.transition = 'none'; bar.offsetWidth; bar.style.transition = '';
+  });
+  document.querySelectorAll('.pane').forEach((p) => p.classList.toggle('on', +p.dataset.pane === i));
+  $('#scrTitle').textContent = t('scr')[i];
+  document.querySelector('.sb-user').style.visibility = i === 0 ? 'hidden' : ''; // not signed in yet
+  if (!changed) return;
+  // small live touches per screen
+  clearInterval(typeTimer); clearInterval(bootTimer);
+  const mail = 'you@example.com';
+  if (i === 0 && !reduceMotion) { let n = 0; $('#typeMail').textContent = ''; typeTimer = setInterval(() => { $('#typeMail').textContent = mail.slice(0, ++n); if (n >= mail.length) clearInterval(typeTimer); }, 70); }
+  else $('#typeMail').textContent = mail;
+  if (i === 3) {
+    let k = reduceMotion ? 100 : 0;
+    const tick = () => { $('#mProg').style.width = `${k}%`; const done = k >= 100; $('#mState').textContent = done ? t('p4_ok') : `${t('p4_boot')} ${k}%`; $('#mState').classList.toggle('ok', done); };
+    tick();
+    if (k < 100) bootTimer = setInterval(() => { k = Math.min(100, k + 4); tick(); if (k >= 100) clearInterval(bootTimer); }, 110);
+  }
+}
+$('#walkList').addEventListener('click', (e) => {
+  const li = e.target.closest('[data-step]');
+  if (!li) return;
+  setStep(+li.dataset.step);
+  stepHold = performance.now() + 12000;
+  $('#walk').classList.add('held');
+  setTimeout(() => { if (performance.now() >= stepHold) $('#walk').classList.remove('held'); }, 12100);
+});
+if (!reduceMotion) {
+  $('#walk').style.setProperty('--walk', `${WALK_MS / 1000}s`);
+  new IntersectionObserver((en) => {
+    clearInterval(stepTimer);
+    if (en[0].isIntersecting) { setStep(stepOn); stepTimer = setInterval(() => { if (performance.now() > stepHold) setStep((stepOn + 1) % 4); }, WALK_MS); }
+  }, { threshold: 0.35 }).observe($('#walk'));
+} else $('#walk').classList.add('still');
+
+// ---- terminal: types the session once when it comes into view
+const TERM = [
+  ['cmd', 'node deploy --gpu h100-sxm --period 1d'],
+  ['out', 'image    pytorch-2.4-cuda12'],
+  ['out', 'gpu      H100 SXM, 80 GB'],
+  ['ok', 'ready    1m 48s, root@185.12.44.91'],
+  ['cmd', 'ssh root@185.12.44.91'],
+  ['host', 'nvidia-smi --query-gpu=name,memory.total --format=csv'],
+  ['out', 'name, memory.total [MiB]'],
+  ['out', 'NVIDIA H100 80GB HBM3, 81559 MiB'],
+  ['host', 'python -c "import torch; print(torch.cuda.is_available())"'],
+  ['ok', 'True'],
+];
+const promptOf = (k) => (k === 'host' ? '<span class="pr">root@gpu-h100:~#</span> ' : '<span class="pr">$</span> ');
+function termLine([k, text], typed) {
+  const body = esc(typed ?? text);
+  if (k === 'cmd' || k === 'host') return promptOf(k) + `<span class="cmd">${body}</span>`;
+  return k === 'ok' ? `<span class="ok">${body}</span>` : body;
+}
+function termFinal() { $('#termBody').innerHTML = TERM.map((l) => termLine(l)).join('\n') + '\n' + promptOf('host') + '<span class="cur"></span>'; }
+function termPlay() {
+  let li = 0, ch = 0;
+  const done = [];
+  const step = () => {
+    if (li >= TERM.length) { termFinal(); return; }
+    const [k, text] = TERM[li];
+    if (k === 'cmd' || k === 'host') {
+      ch++;
+      $('#termBody').innerHTML = [...done, termLine(TERM[li], text.slice(0, ch)) + '<span class="cur"></span>'].join('\n');
+      if (ch < text.length) return setTimeout(step, 28);
+      done.push(termLine(TERM[li])); li++; ch = 0; return setTimeout(step, 420);
+    }
+    done.push(termLine(TERM[li])); li++;
+    $('#termBody').innerHTML = done.join('\n');
+    setTimeout(step, 160);
+  };
+  step();
+}
+if (reduceMotion) termFinal();
+else {
+  $('#termBody').innerHTML = promptOf('cmd') + '<span class="cur"></span>';
+  new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { termPlay(); ob.disconnect(); } }, { threshold: 0.4 }).observe($('#term'));
+}
+$('#termCopy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(TERM[0][1]); $('#termCopy').textContent = t('copied'); setTimeout(() => { $('#termCopy').textContent = t('copy_cmd'); }, 1500); }
+  catch { /* clipboard blocked: the command stays visible to select */ }
+});
+
+function renderPrices() {
+  renderHero();
+  renderSteps();
+  renderNotice();
+  const d = dateText(RATES.date);
+  const disk = money(1);
+  $('#catNote').textContent = state.cur === 'RUB' ? t('cat_note_rub')(disk) : t('cat_note_cur')(state.cur, d, disk);
+  $('#rateNote').textContent = state.cur === 'RUB' ? '' : t('rate_live')(d);
+  renderRows();
+}
+
+const UNITS = [['hour', 1], ['day', 24], ['month', 720]];
+state.unit = 'hour';
+state.sort = null; // { key: 'price' | 'vram' | 'ram' | 'cpu', dir: 1 | -1 }
+const SORT_COL = { vram: 2, ram: 3, cpu: 4, price: 5 };
+
+function renderHead() {
+  const col = (key, label, cls = '') => {
+    const on = state.sort?.key === key;
+    const arrow = on ? (state.sort.dir > 0 ? '↑' : '↓') : '';
+    return `<span class="${cls}"><button type="button" class="sort" data-sort="${key}" aria-pressed="${on}" aria-label="${esc(t('sort_by')(label))}">${esc(label)}<i aria-hidden="true">${arrow}</i></button></span>`;
+  };
+  $('#colsHead').innerHTML = `<span>${esc(t('col_model'))}</span>`
+    + col('vram', t('col_vram'), 'r') + col('ram', t('col_ram'), 'r') + col('cpu', t('col_cpu'), 'r')
+    + col('price', t('col_price')(t('units')[state.unit]), 'r')
+    + `<span class="a">${esc(t('col_avail'))}</span>`;
+  $('#unit').innerHTML = UNITS.map(([k]) => `<button type="button" data-u="${k}" aria-pressed="${state.unit === k}">${esc(t('units')[k])}</button>`).join('');
+}
+
+function rowHTML(g) {
+  const id = g[0].replace(/\W+/g, '-').toLowerCase();
+  const open = state.open === g[0];
+  const mult = UNITS.find(([k]) => k === state.unit)[1];
+  const tag = t('tags')[g[0]];
+  return `<div class="item${g[6] === 'none' ? ' is-none' : ''}" style="border-bottom:1px solid var(--line)">
+    <button type="button" class="row-btn" aria-expanded="${open}" aria-controls="cfg-${id}" data-m="${esc(g[0])}">
+      <span class="name">${esc(g[0])}${tag ? `<span class="tag">${esc(tag)}</span>` : ''}</span>
+      <span class="specs">
+        <span class="num r c-vram">${g[2]} ${esc(t('gb'))}</span>
+        <span class="num r c-ram">${g[3]} ${esc(t('gb'))}</span>
+        <span class="num r c-cpu">${g[4]}</span>
+        <span class="specs-m">${esc(t('specs_m')(g))}</span>
+      </span>
+      <span class="price num r">${esc(money(g[5] * mult, { whole: mult > 1 }))}</span>
+      <span class="avail ${g[6]}">${esc(t(g[6]))}</span>
+    </button>
+    ${open ? cfgHTML(g, id) : ''}
+  </div>`;
+}
+
+function renderRows() {
+  renderHead();
+  let list = GPUS.filter((g) => (state.group === 'all' || g[1] === state.group) && !(state.hideNone && g[6] === 'none'));
+  if (!list.length) { $('#rows').innerHTML = `<p class="empty">${esc(t('empty'))}</p>`; return; }
+  let html = '';
+  if (state.sort) {
+    // sorted: one flat list, ties keep catalogue order
+    const c = SORT_COL[state.sort.key];
+    list = list.map((g, i) => [g, i]).sort((a, b) => (a[0][c] - b[0][c]) * state.sort.dir || a[1] - b[1]).map(([g]) => g);
+    html = list.map(rowHTML).join('');
+  } else {
+    let lastGroup = null;
+    for (const g of list) {
+      if (g[1] !== lastGroup) {
+        lastGroup = g[1];
+        const G = GROUPS.find((x) => x.id === g[1])[state.lang];
+        html += `<div class="group-h"><b>${esc(G[0])}</b><span>${esc(G[1])}</span></div>`;
+      }
+      html += rowHTML(g);
+    }
+  }
+  $('#rows').innerHTML = html;
+  if (state.open) updateTotal();
+}
+
+$('#colsHead').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-sort]');
+  if (!b) return;
+  const key = b.dataset.sort;
+  const first = key === 'price' ? 1 : -1; // cheapest first, biggest memory first
+  if (state.sort?.key !== key) state.sort = { key, dir: first };
+  else if (state.sort.dir === first) state.sort.dir = -first;
+  else state.sort = null; // third click: back to classes
+  renderRows();
+});
+$('#unit').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-u]');
+  if (!b) return;
+  state.unit = b.dataset.u;
+  if (state.unit !== 'hour') cfgChoice.hours = UNITS.find(([k]) => k === state.unit)[1];
+  renderRows();
+});
+
+function cfgHTML(g, id) {
+  const per = PERIODS.map(([k, h]) => `<option value="${h}">${esc(t(k))}</option>`).join('');
+  const disk = STORAGE.map((s) => `<option value="${s}">${s} ${esc(t('gb'))}</option>`).join('');
+  const cta = g[6] === 'none' ? t('notify') : t('rent')(g[0]);
+  return `<div class="cfg" id="cfg-${id}">
+    <label>${esc(t('period'))}<select class="pick" id="cfgPeriod">${per}</select></label>
+    <label>${esc(t('disk'))}<select class="pick" id="cfgDisk">${disk}</select></label>
+    <div class="total"><span>${esc(t('total'))}</span><b class="num" id="cfgTotal"></b><small id="cfgNote"></small></div>
+    <a class="btn ${g[6] === 'none' ? '' : 'btn-main'}" href="#">${esc(cta)}</a>
+  </div>`;
+}
+
+let cfgChoice = { hours: 24, disk: 20 };
+function updateTotal() {
+  const g = GPUS.find((x) => x[0] === state.open);
+  if (!g) return;
+  const p = $('#cfgPeriod'), d = $('#cfgDisk');
+  p.value = String(cfgChoice.hours); d.value = String(cfgChoice.disk);
+  const hourly = g[5] + cfgChoice.disk / 20;
+  const sum = hourly * cfgChoice.hours;
+  $('#cfgTotal').textContent = money(sum, { whole: true });
+  $('#cfgNote').textContent = t('total_note');
+}
+
+/* ===== events ===== */
+$('#groups').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-g]');
+  if (!b) return;
+  state.group = b.dataset.g;
+  for (const x of document.querySelectorAll('#groups [data-g]')) x.setAttribute('aria-pressed', String(x === b));
+  renderRows();
+});
+$('#hideNone').addEventListener('change', (e) => { state.hideNone = e.target.checked; renderRows(); });
+$('#rows').addEventListener('click', (e) => {
+  const b = e.target.closest('.row-btn');
+  if (!b) return;
+  state.open = state.open === b.dataset.m ? null : b.dataset.m;
+  renderRows();
+});
+$('#rows').addEventListener('change', (e) => {
+  if (e.target.id === 'cfgPeriod') cfgChoice.hours = +e.target.value;
+  if (e.target.id === 'cfgDisk') cfgChoice.disk = +e.target.value;
+  updateTotal();
+});
+for (const id of ['#lang', '#lang2']) $(id).addEventListener('change', (e) => { state.lang = e.target.value; store.set('lang', state.lang); renderStatic(); renderPrices(); });
+for (const id of ['#cur', '#cur2']) $(id).addEventListener('change', (e) => { state.cur = e.target.value; store.set('cur', state.cur); $('#cur').value = $('#cur2').value = state.cur; renderPrices(); });
+$('#theme').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  store.set('theme', root.dataset.theme);
+});
+const savedTheme = store.get('theme');
+if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+
+// Russian typesetting: prepositions, conjunctions and particles never hang at a line
+// end, numbers stay with their units. Runs on every text change via an observer.
+const NBSP = '\u00A0';
+const GLUE_RU = /(?<=^|[\s\u00A0(«"])(в|во|и|й|с|со|к|ко|о|об|обо|у|а|я|на|по|за|от|до|из|изо|не|ни|но|да|же|ли|бы|при|для|без|над|под|про|что|как|или|это|то|их|его|её|мы|вы|он|она|вас|нас|уже|ещё|все|всё|раз|два|при|через)[ \t]+/giu;
+const GLUE_EN = /(?<=^|[\s\u00A0("])(a|an|the|of|to|in|on|at|by|or|and|for|with|from|is|it|no|so|up|if|as|be)[ \t]+/giu;
+const GLUE_UNIT = /(\d)[ \t]+(?=(ГБ|GB|ТБ|TB|vCPU|₽|₸|€|\$|Br|сек|мин|ч|×|г\.))/gu;
+const GLUE_NUM = /(\d)\s(?=\d{3}\b)/gu; // 23 136, 1 267
+function glue(text) {
+  if (!text || !/\s/.test(text)) return text;
+  let out = text.replace(GLUE_UNIT, `$1${NBSP}`).replace(GLUE_NUM, `$1${NBSP}`);
+  out = out.replace(state.lang === 'ru' ? GLUE_RU : GLUE_EN, `$1${NBSP}`);
+  return out;
+}
+function typeset(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => (n.parentElement && !n.parentElement.closest('pre, script, style, select, option') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
+  });
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const next = glue(n.nodeValue);
+    if (next !== n.nodeValue) n.nodeValue = next;
+  }
+}
+new MutationObserver((records) => {
+  for (const r of records) {
+    if (r.type === 'characterData') {
+      const n = r.target;
+      if (n.parentElement && !n.parentElement.closest('pre, script, style, select, option')) {
+        const next = glue(n.nodeValue);
+        if (next !== n.nodeValue) n.nodeValue = next;
+      }
+    } else {
+      for (const n of r.addedNodes) {
+        if (n.nodeType === 1) typeset(n);
+        else if (n.nodeType === 3 && n.parentElement && !n.parentElement.closest('pre, script, style, select, option')) {
+          const next = glue(n.nodeValue);
+          if (next !== n.nodeValue) n.nodeValue = next;
+        }
+      }
+    }
+  }
+}).observe(document.body, { childList: true, subtree: true, characterData: true });
+
+// ---- menu for phones and tablets
+const drawer = $('#drawer'), burger = $('#burger');
+const setMenu = (open) => {
+  drawer.hidden = !open;
+  burger.setAttribute('aria-expanded', String(open));
+  burger.setAttribute('aria-label', state.lang === 'ru' ? (open ? 'Закрыть меню' : 'Меню') : (open ? 'Close menu' : 'Menu'));
+  document.body.classList.toggle('menu-open', open);
+};
+burger.addEventListener('click', () => setMenu(drawer.hidden));
+drawer.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !drawer.hidden) setMenu(false); });
+matchMedia('(min-width: 1101px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
+
+renderStatic();
+renderPrices();
+typeset(document.body);
+setMenu(false);
+
+// live rate from the Bank of Russia feed; keeps the snapshot if it is unreachable
+(async () => {
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 4000);
+    const r = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', { signal: ctrl.signal });
+    const j = await r.json();
+    const rub = {};
+    for (const c of CURRENCIES) if (c !== 'RUB' && j.Valute[c]) rub[c] = j.Valute[c].Value / j.Valute[c].Nominal;
+    RATES = { date: j.Date.slice(0, 10), rub: { ...RATES_FALLBACK.rub, ...rub } };
+    renderPrices();
+  } catch { /* offline or blocked: snapshot rates stay */ }
+})();
+</script>
+</body>
+</html>
